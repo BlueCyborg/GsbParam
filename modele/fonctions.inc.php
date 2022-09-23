@@ -1,4 +1,5 @@
 ﻿<?php
+
 /**
  * @file fonctions.inc.php
  * @author Marielle Jouin <jouin.marielle@gmail.com>
@@ -9,18 +10,17 @@
  * regroupe les fonctions pour gérer le panier, et les erreurs de saisie dans le formulaire de commande
 
  * @package  GsbParam\util
-*/
+ */
 /**
  * Initialise le panier
  *
  * Crée un tableau associatif $_SESSION['produits']en session dans le cas
  * où il n'existe pas déjà
-*/
+ */
 function initPanier()
 {
-	if(!isset($_SESSION['produits']))
-	{
-		$_SESSION['produits']= array();
+	if (!isset($_SESSION['produits'])) {
+		$_SESSION['produits'] = array();
 	}
 }
 /**
@@ -41,18 +41,14 @@ function supprimerPanier()
  
  * @param string $idProduit identifiant de produit
  * @return boolean $ok vrai si le produit n'était pas dans la variable, faux sinon 
-*/
+ */
 function ajouterAuPanier($idProduit)
 {
-	
 	$ok = true;
-	if(in_array($idProduit,$_SESSION['produits']))
-	{
+	if (in_array($idProduit, $_SESSION['produits'])) {
 		$ok = false;
-	}
-	else
-	{
-		$_SESSION['produits'][]= $idProduit; // l'indice n'est pas précisé : il sera automatiquement celui qui suit le dernier occupé
+	} else {
+		$_SESSION['produits'][] = $idProduit; // l'indice n'est pas précisé : il sera automatiquement celui qui suit le dernier occupé
 	}
 	return $ok;
 }
@@ -62,11 +58,10 @@ function ajouterAuPanier($idProduit)
  * Retourne le tableau des identifiants de produit
  
  * @return array $_SESSION['produits'] le tableau des id produits du panier 
-*/
+ */
 function getLesIdProduitsDuPanier()
 {
 	return $_SESSION['produits'];
-
 }
 /**
  * Retourne le nombre de produits du panier
@@ -75,13 +70,12 @@ function getLesIdProduitsDuPanier()
  * et retourne le nombre d'éléments de la variable session
  
  * @return int $n
-*/
+ */
 function nbProduitsDuPanier()
 {
 	$n = 0;
-	if(isset($_SESSION['produits']))
-	{
-	$n = count($_SESSION['produits']);
+	if (isset($_SESSION['produits'])) {
+		$n = count($_SESSION['produits']);
 	}
 	return $n;
 }
@@ -93,11 +87,11 @@ function nbProduitsDuPanier()
  
  * @param string $idProduit identifiant de produit
  
-*/
+ */
 function retirerDuPanier($idProduit)
 {
-		$index =array_search($idProduit,$_SESSION['produits']);
-		unset($_SESSION['produits'][$index]);
+	$index = array_search($idProduit, $_SESSION['produits']);
+	unset($_SESSION['produits'][$index]);
 }
 /**
  * teste si une chaîne a un format de code postal
@@ -106,11 +100,11 @@ function retirerDuPanier($idProduit)
  
  * @param string $codePostal  la chaîne testée
  * @return boolean $ok vrai ou faux
-*/
+ */
 function estUnCp($codePostal)
 {
-   
-   return strlen($codePostal)== 5 && estEntier($codePostal);
+
+	return strlen($codePostal) == 5 && estEntier($codePostal);
 }
 /**
  * teste si une chaîne est un entier
@@ -119,9 +113,9 @@ function estUnCp($codePostal)
  
  * @param string $valeur la chaîne testée
  * @return boolean $ok vrai ou faux
-*/
+ */
 
-function estEntier($valeur) 
+function estEntier($valeur)
 {
 	return preg_match("/[^0-9]/", $valeur) == 0;
 }
@@ -132,10 +126,10 @@ function estEntier($valeur)
  
  * @param string $mail la chaîne testée
  * @return boolean $ok vrai ou faux
-*/
+ */
 function estUnMail($mail)
 {
-return  preg_match ('#^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$#', $mail);
+	return  preg_match('#^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$#', $mail);
 }
 /**
  * Retourne un tableau d'erreurs de saisie pour une commande
@@ -146,44 +140,32 @@ return  preg_match ('#^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$#', $mail);
  * @param string $cp chaîne
  * @param string $mail  chaîne 
  * @return array $lesErreurs un tableau de chaînes d'erreurs
-*/
-function getErreursSaisieCommande($nom,$rue,$ville,$cp,$mail)
+ */
+function getErreursSaisieCommande($nom, $rue, $ville, $cp, $mail)
 {
 	$lesErreurs = array();
-	if($nom=="")
-	{
-		$lesErreurs[]="Il faut saisir le champ nom";
+	if ($nom == "") {
+		$lesErreurs[] = "Il faut saisir le champ nom";
 	}
-	if($rue=="")
-	{
-	$lesErreurs[]="Il faut saisir le champ rue";
+	if ($rue == "") {
+		$lesErreurs[] = "Il faut saisir le champ rue";
 	}
-	if($ville=="")
-	{
-		$lesErreurs[]="Il faut saisir le champ ville";
+	if ($ville == "") {
+		$lesErreurs[] = "Il faut saisir le champ ville";
 	}
-	if($cp=="")
-	{
-		$lesErreurs[]="Il faut saisir le champ Code postal";
-	}
-	else
-	{
-		if(!estUnCp($cp))
-		{
-			$lesErreurs[]= "erreur de code postal";
+	if ($cp == "") {
+		$lesErreurs[] = "Il faut saisir le champ Code postal";
+	} else {
+		if (!estUnCp($cp)) {
+			$lesErreurs[] = "erreur de code postal";
 		}
 	}
-	if($mail=="")
-	{
-		$lesErreurs[]="Il faut saisir le champ mail";
-	}
-	else
-	{
-		if(!estUnMail($mail))
-		{
-			$lesErreurs[]= "erreur de mail";
+	if ($mail == "") {
+		$lesErreurs[] = "Il faut saisir le champ mail";
+	} else {
+		if (!estUnMail($mail)) {
+			$lesErreurs[] = "erreur de mail";
 		}
 	}
 	return $lesErreurs;
 }
-?>

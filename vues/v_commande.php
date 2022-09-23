@@ -20,7 +20,7 @@
       </p>
       <p>
          <label for="mail">mail* </label>
-         <input id="mail" type="text"  name="mail" value="<?php echo $mail ?>" size ="25" maxlength="25">
+         <input id="mail" type="mail"  name="mail" value="<?php echo $mail ?>" size ="25" maxlength="25">
       </p> 
 	  	<p>
          <input type="submit" value="Valider" name="valider">

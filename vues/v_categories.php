@@ -13,4 +13,3 @@ foreach( $lesCategories as $uneCategorie)
 }
 ?>
 </ul>
-
