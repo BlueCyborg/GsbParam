@@ -42,14 +42,13 @@ function supprimerPanier()
  * @param string $idProduit identifiant de produit
  * @return boolean $ok vrai si le produit n'était pas dans la variable, faux sinon 
  */
-function ajouterAuPanier($idProduit, $qte)
+function ajouterAuPanier($idProduit)
 {
 	$ok = true;
 	if (in_array($idProduit, $_SESSION['produits'])) {
 		$ok = false;
 	} else {
 		$_SESSION['produits'][] = $idProduit; // l'indice n'est pas précisé : il sera automatiquement celui qui suit le dernier occupé
-		$_SESSION['qte_produits'][] = $qte;
 	}
 	return $ok;
 }
@@ -169,18 +168,4 @@ function getErreursSaisieCommande($nom, $rue, $ville, $cp, $mail)
 		}
 	}
 	return $lesErreurs;
-}
-function connexionCompte($mail)
-{
-	try {
-		$monPdo = connexionPDO();
-		$req = $monPdo->prepare("select mail, nom, prenom, telephone, adresse, cp, ville from utilisateur where mail=:mail");
-		$req->bindParam(':mail', $mail);
-		$req->execute();
-		$lesLignes = $req->fetchAll(PDO::FETCH_ASSOC);
-		return $lesLignes;
-	} catch (PDOException $e) {
-		print "Erreur !: " . $e->getMessage();
-		die();
-	}
 }

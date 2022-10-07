@@ -28,5 +28,8 @@ switch ($uc) {
 			include("controleurs/c_gestionProduits.php");
 			break;
 		}
+	case 'connexion':
+		include("controleurs/c_gestionCompte.php");
+		break;
 }
 include("vues/v_pied.html");

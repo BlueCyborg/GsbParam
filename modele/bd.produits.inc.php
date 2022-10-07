@@ -85,7 +85,7 @@ function getLesProduitsDuTableau($desIdProduit)
 		$lesProduits = array();
 		if ($nbProduits != 0) {
 			foreach ($desIdProduit as $unIdProduit) {
-				$req = $monPdo->prepare("select id, description, prix, image, idCategorie from produit where id = :id");
+				$req = $monPdo->prepare("select id, qte, description, prix, image, idCategorie from produit where id = :id");
 				$req->bindParam(':id', $unIdProduit);
 				$req->execute();
 				$unProduit = $req->fetch(PDO::FETCH_ASSOC);
@@ -175,5 +175,32 @@ function getLesProduits()
 	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
+	}
+}
+function connexionCompte($mail)
+{
+	try {
+		$monPdo = connexionPDO();
+		$req = $monPdo->prepare("select mail, nom, prenom, telephone, adresse, cp, ville from utilisateur where mail=:mail");
+		$req->bindParam(':mail', $mail);
+		$req->execute();
+		$lesLignes = $req->fetchAll(PDO::FETCH_ASSOC);
+		return $lesLignes;
+	} catch (PDOException $e) {
+		print "Erreur !: " . $e->getMessage();
+		die();
+	}
+}
+function getQte($idProduit)
+{
+	try {
+		$monPdo = connexionPDO();
+		$req = $monPdo->prepare("select id, qte from produit where id=:id");
+		$req->bindParam(':id', $idProduit);
+		$req->execute();
+		$lesLignes = $req->fetchAll(PDO::FETCH_ASSOC);
+		return $lesLignes;
+	} catch (PDOException $e) {
+		print "Erreur !: " . $e->getMessage();
 	}
 }

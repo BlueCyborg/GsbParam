@@ -22,6 +22,11 @@ switch ($action) {
 			break;
 		}
 	case 'passerCommande': {
+			echo 'REQUEST';
+			var_dump($_REQUEST);
+			echo 'SESSION';
+			var_dump($_SESSION);
+
 			$n = nbProduitsDuPanier();
 			if ($n > 0) {   // les variables suivantes servent à l'affectation des attributs value du formulaire
 				// ici le formulaire doit être vide, quand il est erroné, le formulaire sera réaffiché pré-rempli
