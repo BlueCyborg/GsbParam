@@ -3,7 +3,6 @@
 </div>
 <div id="produits">
 	<?php
-
 	foreach ($lesProduitsDuPanier as $unProduit) {
 		// récupération des données d'un produit
 		$id = $unProduit['id'];
@@ -17,7 +16,17 @@
 			<div class="descrCard"><?php echo	$description; ?> </div>
 			<div class="prixCard"><?php echo $prix . "€" ?></div>
 			<div class="imgCard"><a href="index.php?uc=gererPanier&produit=<?php echo $id ?>&action=supprimerUnProduit" onclick="return confirm('Voulez-vous vraiment retirer cet article ?');">
-					<img src="images/retirerpanier.png" TITLE="Retirer du panier" alt="retirer du panier"></a></div>
+					<img src="images/retirerpanier.png" TITLE="Retirer du panier" alt="retirer du panier"></a>
+			</div>
+			<div>
+				<!-- <form action="c_gestionPanier.php" method="post"> -->
+				<br>
+				<br>
+				<br>
+				<br>
+				<p>Qté<input name="qte <?= $id ?>" type="number" min=1 max="100"></p>
+				<!-- </form> -->
+			</div>
 		</div>
 	<?php
 	}

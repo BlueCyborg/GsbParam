@@ -11,7 +11,6 @@ if (!isset($_REQUEST['uc']))
 else
 	$uc = $_REQUEST['uc'];
 
-
 switch ($uc) {
 	case 'accueil': {
 			include("vues/v_accueil.html");

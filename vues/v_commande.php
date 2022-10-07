@@ -16,7 +16,7 @@
       </p>
       <p>
          <label for="ville">ville* </label>
-         <input id="ville" type="text" name="ville"  value="<?php echo $ville ?>" size="5" maxlength="5">
+         <input id="ville" type="text" name="ville"  value="<?php echo $ville ?>" size="25" maxlength="25">
       </p>
       <p>
          <label for="mail">mail* </label>

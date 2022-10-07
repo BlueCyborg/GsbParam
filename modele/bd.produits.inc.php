@@ -39,9 +39,10 @@ function getLesInfosCategorie($idCategorie)
 {
 	try {
 		$monPdo = connexionPDO();
-		$req = 'SELECT id, libelle FROM categorie WHERE id="' . $idCategorie . '"';
-		$res = $monPdo->query($req);
-		$laLigne = $res->fetch(PDO::FETCH_ASSOC);
+		$req = $monPdo->prepare("SELECT id, libelle FROM categorie WHERE id= :id");
+		$req->bindParam(':id', $idCategorie);
+		$req->execute();
+		$laLigne = $req->fetch(PDO::FETCH_ASSOC);
 		return $laLigne;
 	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
@@ -60,9 +61,10 @@ function getLesProduitsDeCategorie($idCategorie)
 {
 	try {
 		$monPdo = connexionPDO();
-		$req = 'select id, description, prix, image, idCategorie from produit where idCategorie ="' . $idCategorie . '"';
-		$res = $monPdo->query($req);
-		$lesLignes = $res->fetchAll(PDO::FETCH_ASSOC);
+		$req = $monPdo->prepare("select id, description, prix, image, idCategorie from produit where idCategorie = :id");
+		$req->bindParam(':id', $idCategorie);
+		$req->execute();
+		$lesLignes = $req->fetchAll(PDO::FETCH_ASSOC);
 		return $lesLignes;
 	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
@@ -83,9 +85,10 @@ function getLesProduitsDuTableau($desIdProduit)
 		$lesProduits = array();
 		if ($nbProduits != 0) {
 			foreach ($desIdProduit as $unIdProduit) {
-				$req = 'select id, description, prix, image, idCategorie from produit where id = "' . $unIdProduit . '"';
-				$res = $monPdo->query($req);
-				$unProduit = $res->fetch(PDO::FETCH_ASSOC);
+				$req = $monPdo->prepare("select id, description, prix, image, idCategorie from produit where id = :id");
+				$req->bindParam(':id', $unIdProduit);
+				$req->execute();
+				$unProduit = $req->fetch(PDO::FETCH_ASSOC);
 				$lesProduits[] = $unProduit;
 			}
 		}
@@ -109,7 +112,7 @@ function getLesProduitsDuTableau($desIdProduit)
  * @param array $lesIdProduit tableau associatif contenant les id des produits commandés
 	 
  */
-function creerCommande($nom, $rue, $cp, $ville, $mail, $lesIdProduit)
+function creerCommande($nom, $rue, $ville, $cp, $mail, $lesIdProduit)
 {
 	try {
 		$monPdo = connexionPDO();
@@ -120,12 +123,18 @@ function creerCommande($nom, $rue, $cp, $ville, $mail, $lesIdProduit)
 		$maxi = $laLigne['maxi']; // on place le dernier id de commande dans $maxi
 		$idCommande = $maxi + 1; // on augmente le dernier id de commande de 1 pour avoir le nouvel idCommande
 		$date = date('Y/m/d'); // récupération de la date système
-		$req = "insert into commande values ('$idCommande','$date','$nom','$rue','$cp','$ville','$mail')";
-		$res = $monPdo->exec($req);
+		$req = $monPdo->prepare("insert into commande values ('$idCommande','$date',:nom,:rue,:cp,:ville,:mail)");
+		$req->bindParam(':nom', $nom);
+		$req->bindParam(':rue', $rue);
+		$req->bindParam(':cp', $cp);
+		$req->bindParam(':ville', $ville);
+		$req->bindParam(':mail', $mail);
+		$req->execute();
 		// insertion produits commandés
 		foreach ($lesIdProduit as $unIdProduit) {
-			$req = "insert into contenir values ('$idCommande','$unIdProduit')";
-			$res = $monPdo->exec($req);
+			$req = $monPdo->prepare("insert into contenir (`idCommande`, `idProduit`) values ('$idCommande',:unIdProduit)");
+			$req->bindParam(':unIdProduit', $unIdProduit);
+			$req->execute();
 		}
 	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
@@ -143,9 +152,11 @@ function getLesCommandesDuMois($mois, $an)
 {
 	try {
 		$monPdo = connexionPDO();
-		$req = 'select id, dateCommande, nomPrenomClient, adresseRueClient, cpClient, villeClient, mailClient from commande where YEAR(dateCommande)= ' . $an . ' AND MONTH(dateCommande)=' . $mois;
-		$res = $monPdo->query($req);
-		$lesCommandes = $res->fetchAll(PDO::FETCH_ASSOC);
+		$req = $monPdo->prepare("select id, dateCommande, nomPrenomClient, adresseRueClient, cpClient, villeClient, mailClient from commande where YEAR(dateCommande)= :an AND MONTH(dateCommande)=:mois");
+		$req->bindParam(':an', $an);
+		$req->bindParam(':mois', $mois);
+		$req->execute();
+		$lesCommandes = $req->fetchAll(PDO::FETCH_ASSOC);
 		return $lesCommandes;
 	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();

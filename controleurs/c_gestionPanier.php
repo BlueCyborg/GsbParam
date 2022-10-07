@@ -26,10 +26,15 @@ switch ($action) {
 			if ($n > 0) {   // les variables suivantes servent à l'affectation des attributs value du formulaire
 				// ici le formulaire doit être vide, quand il est erroné, le formulaire sera réaffiché pré-rempli
 				$nom = '';
+				$nom = htmlspecialchars($nom);
 				$rue = '';
+				$rue = htmlspecialchars($rue);
 				$ville = '';
+				$ville = htmlspecialchars($ville);
 				$cp = '';
+				$cp = htmlspecialchars($cp);
 				$mail = '';
+				$mail = htmlspecialchars($mail);
 				include("vues/v_commande.php");
 			} else {
 				$message = "panier vide !!";
@@ -38,19 +43,21 @@ switch ($action) {
 			break;
 		}
 	case 'confirmerCommande': {
+			var_dump($_REQUEST);
+			var_dump($_SESSION);
 			$nom = $_REQUEST['nom'];
 			$rue = $_REQUEST['rue'];
-			$ville = $_REQUEST['ville'];
 			$cp = $_REQUEST['cp'];
+			$ville = $_REQUEST['ville'];
 			$mail = $_REQUEST['mail'];
 			$msgErreurs = getErreursSaisieCommande($nom, $rue, $ville, $cp, $mail);
 			if (count($msgErreurs) != 0) {
 				include("vues/v_erreurs.php");
 				include("vues/v_commande.php");
 			} else {
+				$lesIdProduit = getLesIdProduitsDuPanier();
 				if (isset($lesIdProduit) == true) {
-					$lesIdProduit = getLesIdProduitsDuPanier();
-					creerCommande($nom, $rue, $cp, $ville, $mail, $lesIdProduit);
+					creerCommande($nom, $rue, $ville, $cp, $mail, $lesIdProduit);
 					$message = "Commande enregistrée";
 					supprimerPanier();
 					include("vues/v_message.php");
@@ -63,7 +70,7 @@ switch ($action) {
 		}
 	case 'viderPanier': {
 			$lesIdProduit = getLesIdProduitsDuPanier();
-			foreach($lesIdProduit as $produit){
+			foreach ($lesIdProduit as $produit) {
 				retirerDuPanier($produit);
 			}
 			$message = "panier vide !!";
