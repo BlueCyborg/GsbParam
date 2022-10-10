@@ -169,3 +169,65 @@ function getErreursSaisieCommande($nom, $rue, $ville, $cp, $mail)
 	}
 	return $lesErreurs;
 }
+function getErreursSaisieInscription($nom, $prenom, $telephone, $adresse, $cp, $ville, $mail, $motdepasse, $motdepass2)
+{
+	$lesErreurs = array();
+	if ($nom == "") {
+		$lesErreurs[] = "Il faut saisir le champ nom";
+	}
+	if ($prenom == "") {
+		$lesErreurs[] = "Il faut saisir le champ prenom";
+	}
+	if ($telephone == "") {
+		$lesErreurs[] = "Il faut saisir le champ telephone";
+	}
+	if ($adresse == "") {
+		$lesErreurs[] = "Il faut saisir le champ adresse";
+	}
+	if ($cp == "") {
+		$lesErreurs[] = "Il faut saisir le champ cp";
+	}
+	if ($ville == "") {
+		$lesErreurs[] = "Il faut saisir le champ ville";
+	}
+	if ($cp == "") {
+		$lesErreurs[] = "Il faut saisir le champ Code postal";
+	} else {
+		if (!estUnCp($cp)) {
+			$lesErreurs[] = "erreur de code postal";
+		}
+	}
+	if ($mail == "") {
+		$lesErreurs[] = "Il faut saisir le champ mail";
+	} else {
+		if (!estUnMail($mail)) {
+			$lesErreurs[] = "erreur de mail";
+		}
+	}
+	if ($motdepasse == "") {
+		$lesErreurs[] = "Il faut saisir le champ mot de passe";
+	}
+	if ($motdepass2 == "") {
+		$lesErreurs[] = "Il faut saisir le champ mot de passe";
+	} else {
+		if ($motdepass2 != $motdepasse) {
+			$lesErreurs[] = "Les mots de passe ne sont pas identiques";
+		}
+	}
+	return $lesErreurs;
+}
+function getErreursSaisieConnexion($mail, $pass)
+{
+	$lesErreurs = array();
+	if ($mail == "") {
+		$lesErreurs[] = "Il faut saisir le champ mail";
+	} else {
+		if (!estUnMail($mail)) {
+			$lesErreurs[] = "Erreur: votre saisie ne correspond pas à un mail";
+		}
+	}
+	if ($pass == "") {
+		$lesErreurs[] = "Il faut saisir le champ pass";
+	}
+	return $lesErreurs;
+}

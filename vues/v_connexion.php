@@ -10,12 +10,8 @@
     <br>
     <input type="password" placeholder="Entrer le mot de passe" name="password" required>
     <br><br>
-    <input type="submit" id='submit' value='LOGIN'>
-    <?php
-    if (isset($_GET['erreur'])) {
-        $err = $_GET['erreur'];
-        if ($err == 1 || $err == 2)
-            echo "<p style='color:red'>Utilisateur ou mot de passe incorrect</p>";
-    }
-    ?>
+    <input type="submit" id='submit' value='submit'>
 </form>
+<h5>Déjà inscrit ?<br>
+    <a href="index.php?uc=connexion&action=inscription">Cliquez ici</a>
+</h5>

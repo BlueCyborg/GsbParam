@@ -177,20 +177,6 @@ function getLesProduits()
 		die();
 	}
 }
-function connexionCompte($mail)
-{
-	try {
-		$monPdo = connexionPDO();
-		$req = $monPdo->prepare("select mail, nom, prenom, telephone, adresse, cp, ville from utilisateur where mail=:mail");
-		$req->bindParam(':mail', $mail);
-		$req->execute();
-		$lesLignes = $req->fetchAll(PDO::FETCH_ASSOC);
-		return $lesLignes;
-	} catch (PDOException $e) {
-		print "Erreur !: " . $e->getMessage();
-		die();
-	}
-}
 function getQte($idProduit)
 {
 	try {
@@ -198,9 +184,56 @@ function getQte($idProduit)
 		$req = $monPdo->prepare("select id, qte from produit where id=:id");
 		$req->bindParam(':id', $idProduit);
 		$req->execute();
-		$lesLignes = $req->fetchAll(PDO::FETCH_ASSOC);
-		return $lesLignes;
+		$laQte = $req->fetchAll(PDO::FETCH_ASSOC);
+		return $laQte;
 	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
+	}
+}
+function inscription($nomI, $prenomI, $telephoneI, $adresseI, $cpI, $villeI, $emailI, $passwordI)
+{
+	try {
+		$nom = htmlspecialchars(trim($nomI));
+		$prenom = htmlspecialchars(trim($prenomI));
+		$telephone = htmlspecialchars(trim($telephoneI));
+		$adresse = htmlspecialchars(trim($adresseI));
+		$cp = htmlspecialchars(trim($cpI));
+		$ville = htmlspecialchars(trim($villeI));
+		$email = htmlspecialchars(trim($emailI));
+		$password = htmlspecialchars(trim($passwordI));
+
+		if (strlen($password) >= 6) {
+			$password = password_hash($password, PASSWORD_DEFAULT);
+			$monPdo = connexionPDO();
+			$req = $monPdo->prepare("INSERT INTO `utilisateur` (`mail`, `mdp`, `nom`, `prenom`, `telephone`, `adresse`, `cp`, `ville`) VALUES (:mail, :mdp, :nom, :prenom, :telephone, :adresse, :cp, :ville)");
+			$req->bindParam(':mail', $email);
+			$req->bindParam(':mdp', $password);
+			$req->bindParam(':nom', $nom);
+			$req->bindParam(':prenom', $prenom);
+			$req->bindParam(':telephone', $telephone);
+			$req->bindParam(':adresse', $adresse);
+			$req->bindParam(':cp', $cp);
+			$req->bindParam(':ville', $ville);
+			$req->execute();
+			$uneInscription = $req->fetchAll(PDO::FETCH_ASSOC);
+			return $uneInscription;
+		} else echo "Le mot de passe est trop court !";
+	} catch (\Throwable $e) {
+		echo 'Erreur : ' . $e;
+	}
+}
+function connexionCompte($mail, $password)
+{
+	try {
+		$monPdo = connexionPDO();
+		$req = $monPdo->prepare("select mail, mdp from utilisateur where mail=:mail AND mdp=:pass");
+		$req->bindParam(':mail', $mail);
+		$req->bindParam(':pass', $password);
+		$req->execute();
+		$leCompte = $req->fetchAll(PDO::FETCH_ASSOC);
+		return $leCompte;
+	} catch (PDOException $e) {
+		print "Erreur !: " . $e->getMessage();
+		die();
 	}
 }
