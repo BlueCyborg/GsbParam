@@ -202,36 +202,41 @@ function inscription($nomI, $prenomI, $telephoneI, $adresseI, $cpI, $villeI, $em
 		$email = htmlspecialchars(trim($emailI));
 		$password = htmlspecialchars(trim($passwordI));
 
-		if (strlen($password) >= 6) {
-			$password = password_hash($password, PASSWORD_DEFAULT);
-			$monPdo = connexionPDO();
-			$req = $monPdo->prepare("INSERT INTO `utilisateur` (`mail`, `mdp`, `nom`, `prenom`, `telephone`, `adresse`, `cp`, `ville`) VALUES (:mail, :mdp, :nom, :prenom, :telephone, :adresse, :cp, :ville)");
-			$req->bindParam(':mail', $email);
-			$req->bindParam(':mdp', $password);
-			$req->bindParam(':nom', $nom);
-			$req->bindParam(':prenom', $prenom);
-			$req->bindParam(':telephone', $telephone);
-			$req->bindParam(':adresse', $adresse);
-			$req->bindParam(':cp', $cp);
-			$req->bindParam(':ville', $ville);
-			$req->execute();
-			$uneInscription = $req->fetchAll(PDO::FETCH_ASSOC);
-			return $uneInscription;
-		} else echo "Le mot de passe est trop court !";
+		$password = password_hash($password, PASSWORD_BCRYPT);
+		$monPdo = connexionPDO();
+		$req = $monPdo->prepare("INSERT INTO `utilisateur` (`mail`, `mdp`, `nom`, `prenom`, `telephone`, `adresse`, `cp`, `ville`) VALUES (:mail, :mdp, :nom, :prenom, :telephone, :adresse, :cp, :ville)");
+		$req->bindParam(':mail', $email);
+		$req->bindParam(':mdp', $password);
+		$req->bindParam(':nom', $nom);
+		$req->bindParam(':prenom', $prenom);
+		$req->bindParam(':telephone', $telephone);
+		$req->bindParam(':adresse', $adresse);
+		$req->bindParam(':cp', $cp);
+		$req->bindParam(':ville', $ville);
+		$req->execute();
+		$uneInscription = $req->fetchAll(PDO::FETCH_ASSOC);
+		return $uneInscription;
 	} catch (\Throwable $e) {
 		echo 'Erreur : ' . $e;
 	}
 }
-function connexionCompte($mail, $password)
+function connexionCompte(string $mail, string $password): bool
 {
 	try {
 		$monPdo = connexionPDO();
-		$req = $monPdo->prepare("select mail, mdp from utilisateur where mail=:mail AND mdp=:pass");
+		$req = $monPdo->prepare("select mail, mdp from utilisateur where mail=:mail");
 		$req->bindParam(':mail', $mail);
-		$req->bindParam(':pass', $password);
 		$req->execute();
-		$leCompte = $req->fetchAll(PDO::FETCH_ASSOC);
-		return $leCompte;
+
+		$leCompte = $req->fetch(PDO::FETCH_ASSOC);
+
+		if ($leCompte) {
+			$validate = password_verify($password, $leCompte['mdp']);
+		}else {
+			$validate = false;
+		}
+
+		return $validate;
 	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();

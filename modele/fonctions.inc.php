@@ -214,6 +214,9 @@ function getErreursSaisieInscription($nom, $prenom, $telephone, $adresse, $cp, $
 			$lesErreurs[] = "Les mots de passe ne sont pas identiques";
 		}
 	}
+	if (strlen($motdepasse) <= 6) {
+		$lesErreurs[] = "Le mot de passe est trop court";
+	}
 	return $lesErreurs;
 }
 function getErreursSaisieConnexion($mail, $pass)

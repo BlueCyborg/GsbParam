@@ -4,7 +4,7 @@ include("vues/v_entete.html");
 require_once("modele/fonctions.inc.php");
 require_once("modele/bd.produits.inc.php");
 
-include("vues/v_bandeau.html");
+include("vues/v_bandeau.php");
 
 if (!isset($_REQUEST['uc']))
 	$uc = 'accueil'; // si $_GET['uc'] n'existe pas , $uc reçoit une valeur par défaut

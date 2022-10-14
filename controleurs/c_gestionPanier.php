@@ -27,23 +27,29 @@ switch ($action) {
 			echo 'SESSION';
 			var_dump($_SESSION);
 
-			$n = nbProduitsDuPanier();
-			if ($n > 0) {   // les variables suivantes servent à l'affectation des attributs value du formulaire
-				// ici le formulaire doit être vide, quand il est erroné, le formulaire sera réaffiché pré-rempli
-				$nom = '';
-				$nom = htmlspecialchars($nom);
-				$rue = '';
-				$rue = htmlspecialchars($rue);
-				$ville = '';
-				$ville = htmlspecialchars($ville);
-				$cp = '';
-				$cp = htmlspecialchars($cp);
-				$mail = '';
-				$mail = htmlspecialchars($mail);
-				include("vues/v_commande.php");
+			if (isset($_SESSION['user'])) {
+
+				$n = nbProduitsDuPanier();
+				if ($n > 0) {   // les variables suivantes servent à l'affectation des attributs value du formulaire
+					// ici le formulaire doit être vide, quand il est erroné, le formulaire sera réaffiché pré-rempli
+					$nom = '';
+					$nom = htmlspecialchars($nom);
+					$rue = '';
+					$rue = htmlspecialchars($rue);
+					$ville = '';
+					$ville = htmlspecialchars($ville);
+					$cp = '';
+					$cp = htmlspecialchars($cp);
+					$mail = '';
+					$mail = htmlspecialchars($mail);
+					include("vues/v_commande.php");
+				} else {
+					$message = "panier vide !!";
+					include("vues/v_message.php");
+				}
 			} else {
-				$message = "panier vide !!";
-				include("vues/v_message.php");
+				$msgErreurs[] = "Vous devez être connecté";
+				include("vues/v_erreurs.php");
 			}
 			break;
 		}

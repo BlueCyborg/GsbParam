@@ -12,6 +12,6 @@
     <br><br>
     <input type="submit" id='submit' value='submit'>
 </form>
-<h5>Déjà inscrit ?<br>
+<h5>Vous souhaitez vous inscrire ?<br>
     <a href="index.php?uc=connexion&action=inscription">Cliquez ici</a>
 </h5>
