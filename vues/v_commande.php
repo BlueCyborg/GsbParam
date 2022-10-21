@@ -1,32 +1,24 @@
 ﻿<div id="creationCommande">
-<form method="POST" action="index.php?uc=gererPanier&action=confirmerCommande">
-   <fieldset>
-     <legend>Commande</legend>
-		<p>
-			<label for="nom">Nom Prénom*</label>
-			<input id="nom" type="text" name="nom" value="<?php echo $nom ?>" size="30" maxlength="45">
-		</p>
-		<p>
-			<label for="rue">Rue*</label>
-			 <input id="rue" type="text" name="rue" value="<?php echo $rue ?>" size="30" maxlength="45">
-		</p>
-		<p>
-         <label for="cp">Code postal* </label>
-         <input id="cp" type="text" name="cp" value="<?php echo $cp ?>" size="10" maxlength="10">
-      </p>
-      <p>
-         <label for="ville">Ville* </label>
-         <input id="ville" type="text" name="ville"  value="<?php echo $ville ?>" size="25" maxlength="25">
-      </p>
-	  	<p>
-         <input type="submit" value="Valider" name="valider">
-         <input type="reset" value="Annuler" name="annuler"> 
-      </p>
-	  </fieldset>
-</form>
+   <form method="POST" action="index.php?uc=gererPanier&action=confirmerCommande">
+      <fieldset>
+         <legend>Commande</legend>
+         <p>Nom Prénom <?= ': ' . $nom ?></p>
+         <p>Rue <?= ': ' . $rue ?></p>
+         <p>Code postal <?= ': ' . $cp ?></p>
+         <p>Ville <?= ': ' . $ville ?></p>
+         <p>Mail <?= ': ' . $mail ?></p>
+         <p>Produits*<br>
+            <?php
+            foreach ($_SESSION['produits'] as $unProduit) {
+               
+            }
+            ?>
+            <img src="images/laino-shampooing-douche-au-the-vert-bio-200ml.png" width="75">
+         </p>
+         <p>
+            <input type="submit" value="Valider" name="valider">
+            <input type="reset" value="Annuler" name="annuler">
+         </p>
+      </fieldset>
+   </form>
 </div>
-
-
-
-
-

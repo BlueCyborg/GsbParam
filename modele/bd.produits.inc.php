@@ -85,7 +85,7 @@ function getLesProduitsDuTableau($desIdProduit)
 		$lesProduits = array();
 		if ($nbProduits != 0) {
 			foreach ($desIdProduit as $unIdProduit) {
-				$req = $monPdo->prepare("select id, qte, description, prix, image, idCategorie from produit where id = :id");
+				$req = $monPdo->prepare("select id, description, prix, image, idCategorie from produit where id = :id");
 				$req->bindParam(':id', $unIdProduit);
 				$req->execute();
 				$unProduit = $req->fetch(PDO::FETCH_ASSOC);
@@ -122,8 +122,9 @@ function creerCommande($nom, $rue, $ville, $cp, $mail, $lesIdProduit)
 		$laLigne = $res->fetch();
 		$maxi = $laLigne['maxi']; // on place le dernier id de commande dans $maxi
 		$idCommande = $maxi + 1; // on augmente le dernier id de commande de 1 pour avoir le nouvel idCommande
+		echo $idCommande;
 		$date = date('Y/m/d'); // récupération de la date système
-		$req = $monPdo->prepare("insert into commande values ('$idCommande','$date',:nom,:rue,:cp,:ville,:mail)");
+		$req = $monPdo->prepare("insert into commande (`id`, `idProd`, `dateCommande`, `nom`, `rue`, `cp`, `ville`, `mailUtilisateur`) values ('$maxi', '$idCommande', '$date', :nom, :rue, :cp, :ville, :mail)");
 		$req->bindParam(':nom', $nom);
 		$req->bindParam(':rue', $rue);
 		$req->bindParam(':cp', $cp);
@@ -177,68 +178,15 @@ function getLesProduits()
 		die();
 	}
 }
-function getQte($idProduit)
+function getInfoProduit($idProduit)
 {
 	try {
 		$monPdo = connexionPDO();
-		$req = $monPdo->prepare("select id, qte from produit where id=:id");
+		$req = $monPdo->prepare("select id, description, prix, image from produit where id=:id");
 		$req->bindParam(':id', $idProduit);
 		$req->execute();
-		$laQte = $req->fetchAll(PDO::FETCH_ASSOC);
-		return $laQte;
+		return $req->fetchAll(PDO::FETCH_ASSOC);
 	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
-	}
-}
-function inscription($nomI, $prenomI, $telephoneI, $adresseI, $cpI, $villeI, $emailI, $passwordI)
-{
-	try {
-		$nom = htmlspecialchars(trim($nomI));
-		$prenom = htmlspecialchars(trim($prenomI));
-		$telephone = htmlspecialchars(trim($telephoneI));
-		$adresse = htmlspecialchars(trim($adresseI));
-		$cp = htmlspecialchars(trim($cpI));
-		$ville = htmlspecialchars(trim($villeI));
-		$email = htmlspecialchars(trim($emailI));
-		$password = htmlspecialchars(trim($passwordI));
-
-		$password = password_hash($password, PASSWORD_BCRYPT);
-		$monPdo = connexionPDO();
-		$req = $monPdo->prepare("INSERT INTO `utilisateur` (`mail`, `mdp`, `nom`, `prenom`, `telephone`, `adresse`, `cp`, `ville`) VALUES (:mail, :mdp, :nom, :prenom, :telephone, :adresse, :cp, :ville)");
-		$req->bindParam(':mail', $email);
-		$req->bindParam(':mdp', $password);
-		$req->bindParam(':nom', $nom);
-		$req->bindParam(':prenom', $prenom);
-		$req->bindParam(':telephone', $telephone);
-		$req->bindParam(':adresse', $adresse);
-		$req->bindParam(':cp', $cp);
-		$req->bindParam(':ville', $ville);
-		$req->execute();
-		$uneInscription = $req->fetchAll(PDO::FETCH_ASSOC);
-		return $uneInscription;
-	} catch (\Throwable $e) {
-		echo 'Erreur : ' . $e;
-	}
-}
-function connexionCompte(string $mail, string $password): bool
-{
-	try {
-		$monPdo = connexionPDO();
-		$req = $monPdo->prepare("select mail, mdp from utilisateur where mail=:mail");
-		$req->bindParam(':mail', $mail);
-		$req->execute();
-
-		$leCompte = $req->fetch(PDO::FETCH_ASSOC);
-
-		if ($leCompte) {
-			$validate = password_verify($password, $leCompte['mdp']);
-		}else {
-			$validate = false;
-		}
-
-		return $validate;
-	} catch (PDOException $e) {
-		print "Erreur !: " . $e->getMessage();
-		die();
 	}
 }

@@ -31,7 +31,7 @@
 				<br>
 				<br>
 				<p>Quantité
-					<input type="number" name="qte[<?= $id ?>]" min="1" value="1" required />
+					<input type="number" name="qte[<?= $id ?>]" min="1" max="100" value="1" required />
 				</p>
 			</div>
 		<?php

@@ -29,7 +29,7 @@ USE gsbparam;
 
 DROP TABLE IF EXISTS administrateur;
 CREATE TABLE IF NOT EXISTS administrateur (
-  `id` char(3) COLLATE latin1_bin NOT NULL,
+  `id` int COLLATE latin1_bin NOT NULL,
   `nom` char(32) COLLATE latin1_bin NOT NULL,
   `mdp` char(100) COLLATE latin1_bin NOT NULL,
   PRIMARY KEY (`id`)
@@ -70,7 +70,7 @@ INSERT INTO categorie (id, libelle) VALUES
 
 DROP TABLE IF EXISTS commande;
 CREATE TABLE IF NOT EXISTS commande (
-  `id` char(32) COLLATE latin1_bin NOT NULL,
+  `id` int COLLATE latin1_bin NOT NULL,
   `dateCommande` date DEFAULT NULL,
   `nomPrenomClient` char(32) COLLATE latin1_bin DEFAULT NULL,
   `adresseRueClient` char(32) COLLATE latin1_bin DEFAULT NULL,
@@ -96,7 +96,7 @@ INSERT INTO commande (id, dateCommande, nomPrenomClient, adresseRueClient, cpCli
 
 DROP TABLE IF EXISTS contenir;
 CREATE TABLE IF NOT EXISTS contenir (
-  `idCommande` char(32) COLLATE latin1_bin NOT NULL,
+  `idCommande` int COLLATE latin1_bin NOT NULL,
   `idProduit` char(32) COLLATE latin1_bin NOT NULL,
   PRIMARY KEY (`idCommande`,`idProduit`),
   KEY `I_FK_CONTENIR_COMMANDE` (`idCommande`),

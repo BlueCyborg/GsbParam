@@ -30,17 +30,18 @@ switch ($action) {
 			if (isset($_SESSION['user'])) {
 
 				$n = nbProduitsDuPanier();
-				if ($n > 0) {   // les variables suivantes servent à l'affectation des attributs value du formulaire
+				if ($n > 0) {
 					// ici le formulaire doit être vide, quand il est erroné, le formulaire sera réaffiché pré-rempli
-					$nom = '';
+					$info = infoUtilisateur($_SESSION['user']);
+					$nom = $info['nom'] . ' '. $info['prenom'];
 					$nom = htmlspecialchars($nom);
-					$rue = '';
+					$rue = $info['adresse'];
 					$rue = htmlspecialchars($rue);
-					$ville = '';
+					$ville = $info['ville'];
 					$ville = htmlspecialchars($ville);
-					$cp = '';
+					$cp = $info['cp'];
 					$cp = htmlspecialchars($cp);
-					$mail = '';
+					$mail = $_SESSION['user'];
 					$mail = htmlspecialchars($mail);
 					include("vues/v_commande.php");
 				} else {
