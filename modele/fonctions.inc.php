@@ -63,6 +63,10 @@ function getLesIdProduitsDuPanier()
 {
 	return $_SESSION['produits'];
 }
+function getLaQte()
+{
+	return $_SESSION['qte'];
+}
 /**
  * Retourne le nombre de produits du panier
  *

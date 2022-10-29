@@ -112,7 +112,7 @@ function getLesProduitsDuTableau($desIdProduit)
  * @param array $lesIdProduit tableau associatif contenant les id des produits commandés
 	 
  */
-function creerCommande($nom, $rue, $ville, $cp, $mail, $lesIdProduit)
+function creerCommande($nom, $rue, $ville, $cp, $mail, $lesIdProduit, $lesQte)
 {
 	try {
 		$monPdo = connexionPDO();

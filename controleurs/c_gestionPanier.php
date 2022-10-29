@@ -22,18 +22,13 @@ switch ($action) {
 			break;
 		}
 	case 'passerCommande': {
-			echo 'REQUEST';
-			var_dump($_REQUEST);
-			echo 'SESSION';
-			var_dump($_SESSION);
-
+			$_SESSION['qte'] = $_REQUEST['qte'];
 			if (isset($_SESSION['user'])) {
-
 				$n = nbProduitsDuPanier();
 				if ($n > 0) {
 					// ici le formulaire doit être vide, quand il est erroné, le formulaire sera réaffiché pré-rempli
 					$info = infoUtilisateur($_SESSION['user']);
-					$nom = $info['nom'] . ' '. $info['prenom'];
+					$nom = $info['nom'] . ' ' . $info['prenom'];
 					$nom = htmlspecialchars($nom);
 					$rue = $info['adresse'];
 					$rue = htmlspecialchars($rue);
@@ -55,21 +50,18 @@ switch ($action) {
 			break;
 		}
 	case 'confirmerCommande': {
-			var_dump($_REQUEST);
-			var_dump($_SESSION);
-			$nom = $_REQUEST['nom'];
-			$rue = $_REQUEST['rue'];
-			$cp = $_REQUEST['cp'];
-			$ville = $_REQUEST['ville'];
-			$mail = $_REQUEST['mail'];
+			$info = infoUtilisateur($_SESSION['user']);
+			//Reprendre à partir d'ici
 			$msgErreurs = getErreursSaisieCommande($nom, $rue, $ville, $cp, $mail);
 			if (count($msgErreurs) != 0) {
 				include("vues/v_erreurs.php");
 				include("vues/v_commande.php");
 			} else {
 				$lesIdProduit = getLesIdProduitsDuPanier();
-				if (isset($lesIdProduit) == true) {
-					creerCommande($nom, $rue, $ville, $cp, $mail, $lesIdProduit);
+				$lesQte = getLaQte();
+				var_dump($_SESSION);
+				if (isset($lesIdProduit) && isset($lesQte) == true) {
+					creerCommande($nom, $rue, $ville, $cp, $mail, $lesIdProduit, $lesQte);
 					$message = "Commande enregistrée";
 					supprimerPanier();
 					include("vues/v_message.php");

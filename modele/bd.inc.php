@@ -18,10 +18,10 @@
  */
 function connexionPDO()
 {
-    $login = 'root';
-    $mdp = '';
+    $login = 'dev';
+    $mdp = 'dev';
     $bd = 'gsbParam';
-    $serveur = 'localhost:3307';
+    $serveur = 'localhost';
 
     try {
         $conn = new PDO("mysql:host=$serveur;dbname=$bd", $login, $mdp, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''));
@@ -52,19 +52,33 @@ function infoUtilisateur($mail): array
         die();
     }
 }
-function inscription($nomI, $prenomI, $telephoneI, $adresseI, $cpI, $villeI, $emailI, $passwordI)
+/**
+ * Fonction permettant d'inscrire un nouvelle utilisateur avec son nom, prenom, telephone, adresse, code postal, ville, email, mot de passe
+ * 
+ * @param String $nom
+ * @param String $prenom
+ * @param String $telephone
+ * @param String $adresse
+ * @param String $code postal
+ * @param String $ville
+ * @param String $email
+ * @param String $password
+ * @return array envoie les paramètres dans la base de donnée puis retourne un tableau si l'insertion à fonctionné sinon false
+ */
+function inscription($nom, $prenom, $telephone, $adresse, $cp, $ville, $email, $password): array
 {
     try {
-        $nom = htmlspecialchars(trim($nomI));
-        $prenom = htmlspecialchars(trim($prenomI));
-        $telephone = htmlspecialchars(trim($telephoneI));
-        $adresse = htmlspecialchars(trim($adresseI));
-        $cp = htmlspecialchars(trim($cpI));
-        $ville = htmlspecialchars(trim($villeI));
-        $email = htmlspecialchars(trim($emailI));
-        $password = htmlspecialchars(trim($passwordI));
+        $nom = htmlspecialchars(trim($nom));
+        $prenom = htmlspecialchars(trim($prenom));
+        $telephone = htmlspecialchars(trim($telephone));
+        $adresse = htmlspecialchars(trim($adresse));
+        $cp = htmlspecialchars(trim($cp));
+        $ville = htmlspecialchars(trim($ville));
+        $email = htmlspecialchars(trim($email));
+        $password = htmlspecialchars(trim($password));
 
         $password = password_hash($password, PASSWORD_BCRYPT);
+
         $monPdo = connexionPDO();
         $req = $monPdo->prepare("INSERT INTO `utilisateur` (`mail`, `mdp`, `nom`, `prenom`, `telephone`, `adresse`, `cp`, `ville`) VALUES (:mail, :mdp, :nom, :prenom, :telephone, :adresse, :cp, :ville)");
         $req->bindParam(':mail', $email);
@@ -82,6 +96,13 @@ function inscription($nomI, $prenomI, $telephoneI, $adresseI, $cpI, $villeI, $em
         echo 'Erreur : ' . $e;
     }
 }
+/**
+ * Fonction permettant de connecter l'utilisateur si le mot de passe correspond bien à l'adresse mail
+ * 
+ * @param String $mail
+ * @param String $password
+ * @return bool Le booléen correspondant au resultat de la vérification du mot de passe
+ */
 function connexionCompte(string $mail, string $password): bool
 {
     try {
