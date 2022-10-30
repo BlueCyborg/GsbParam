@@ -51,17 +51,21 @@ switch ($action) {
 		}
 	case 'confirmerCommande': {
 			$info = infoUtilisateur($_SESSION['user']);
-			//Reprendre à partir d'ici
-			$msgErreurs = getErreursSaisieCommande($nom, $rue, $ville, $cp, $mail);
+			$mail = htmlspecialchars($_SESSION['user']);
+			$nom = htmlspecialchars($info['nom'] . ' ' . $info['prenom']);
+			$telephone = htmlspecialchars($info['telephone']);
+			$adresse = htmlspecialchars($info['adresse']);
+			$cp = htmlspecialchars($info['cp']);
+			$ville = htmlspecialchars($info['ville']);
+			$msgErreurs = getErreursSaisieCommande($mail, $nom, $telephone, $adresse, $cp, $ville);
 			if (count($msgErreurs) != 0) {
 				include("vues/v_erreurs.php");
 				include("vues/v_commande.php");
 			} else {
 				$lesIdProduit = getLesIdProduitsDuPanier();
 				$lesQte = getLaQte();
-				var_dump($_SESSION);
 				if (isset($lesIdProduit) && isset($lesQte) == true) {
-					creerCommande($nom, $rue, $ville, $cp, $mail, $lesIdProduit, $lesQte);
+					creerCommande($mail, $lesIdProduit, $lesQte);
 					$message = "Commande enregistrée";
 					supprimerPanier();
 					include("vues/v_message.php");

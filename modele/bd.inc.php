@@ -43,7 +43,7 @@ function infoUtilisateur($mail): array
     try {
         $monPdo = connexionPDO();
 
-        $req = $monPdo->prepare("select nom, prenom, telephone, adresse, cp, ville from utilisateur where mail = :mail");
+        $req = $monPdo->prepare("select id, nom, prenom, telephone, adresse, cp, ville from utilisateur where mail = :mail");
         $req->bindParam(':mail', $mail);
         $req->execute();
         return $req->fetch(PDO::FETCH_ASSOC);

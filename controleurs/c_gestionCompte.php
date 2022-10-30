@@ -53,8 +53,15 @@ switch ($action) {
                     //S'il y a des erreurs alors on les affiches
                     include("vues/v_erreurs.php");
                 } else {
-                    inscription($nom, $prenom, $telephone, $adresse, $cp, $ville, $email, $password);
-                    echo 'Inscription réalisé avec succès.';
+                    //Si l'utilisateur existe déjà alors on ne lui permet pas l'inscription
+                    $exist = existeUtilisateur(htmlspecialchars($email));
+                    if ($exist == 1) {
+                        $msgErreurs[] = "L'email existe déjà.";
+                        include("vues/v_erreurs.php");
+                    } else {
+                        inscription($nom, $prenom, $telephone, $adresse, $cp, $ville, $email, $password);
+                        echo 'Inscription réalisé avec succès.';
+                    }
                 }
             } else {
                 //Si les aucunes informations n'est rentré dans le formulaire alors on le propose

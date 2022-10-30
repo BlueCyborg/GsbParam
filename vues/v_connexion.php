@@ -10,7 +10,7 @@
     <br>
     <input type="password" placeholder="Entrer le mot de passe" name="password" required>
     <br><br>
-    <input type="submit" id='submit' value='submit'>
+    <input type="submit" value='Connexion'>
 </form>
 <h5>Vous souhaitez vous inscrire ?<br>
     <a href="index.php?uc=connexion&action=inscription">Cliquez ici</a>

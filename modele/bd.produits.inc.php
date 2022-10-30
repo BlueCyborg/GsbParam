@@ -112,7 +112,7 @@ function getLesProduitsDuTableau($desIdProduit)
  * @param array $lesIdProduit tableau associatif contenant les id des produits commandés
 	 
  */
-function creerCommande($nom, $rue, $ville, $cp, $mail, $lesIdProduit, $lesQte)
+function creerCommande($mail, $lesIdProduit, $lesQte)
 {
 	try {
 		$monPdo = connexionPDO();
@@ -122,7 +122,6 @@ function creerCommande($nom, $rue, $ville, $cp, $mail, $lesIdProduit, $lesQte)
 		$laLigne = $res->fetch();
 		$maxi = $laLigne['maxi']; // on place le dernier id de commande dans $maxi
 		$idCommande = $maxi + 1; // on augmente le dernier id de commande de 1 pour avoir le nouvel idCommande
-		echo $idCommande;
 		$date = date('Y/m/d'); // récupération de la date système
 		$req = $monPdo->prepare("insert into commande (`id`, `idProd`, `dateCommande`, `nom`, `rue`, `cp`, `ville`, `mailUtilisateur`) values ('$maxi', '$idCommande', '$date', :nom, :rue, :cp, :ville, :mail)");
 		$req->bindParam(':nom', $nom);

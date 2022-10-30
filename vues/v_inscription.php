@@ -35,5 +35,5 @@
     <label><b>Répétez votre mot de passe</b></label>
     <input type="password" name="repeatpassword">
     <br><br>
-    <input type="submit" name="submit" value="Valider">
+    <input type="submit" value="M'inscrire">
 </form>

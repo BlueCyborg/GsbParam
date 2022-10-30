@@ -138,24 +138,32 @@ function estUnMail($mail)
 /**
  * Retourne un tableau d'erreurs de saisie pour une commande
  *
- * @param string $nom  chaîne testée
- * @param  string $rue chaîne
- * @param string $ville chaîne
+ * @param string $mail de l'utilisateur testé
+ * @param string $nom chaîne
+ * @param string $telephone chaîne
+ * @param string $adresse chaîne
  * @param string $cp chaîne
- * @param string $mail  chaîne 
+ * @param string $ville chaine
  * @return array $lesErreurs un tableau de chaînes d'erreurs
  */
-function getErreursSaisieCommande($nom, $rue, $ville, $cp, $mail)
+function getErreursSaisieCommande($mail, $nom, $telephone, $adresse, $cp, $ville)
 {
 	$lesErreurs = array();
+	if ($mail == "") {
+		$lesErreurs[] = "Il faut saisir le champ mail";
+	} else {
+		if (!estUnMail($mail)) {
+			$lesErreurs[] = "erreur de mail";
+		}
+	}
 	if ($nom == "") {
 		$lesErreurs[] = "Il faut saisir le champ nom";
 	}
-	if ($rue == "") {
-		$lesErreurs[] = "Il faut saisir le champ rue";
+	if ($telephone == "") {
+		$lesErreurs[] = "Il faut saisir le champ téléphone";
 	}
-	if ($ville == "") {
-		$lesErreurs[] = "Il faut saisir le champ ville";
+	if ($adresse == "") {
+		$lesErreurs[] = "Il faut saisir le champ adresse";
 	}
 	if ($cp == "") {
 		$lesErreurs[] = "Il faut saisir le champ Code postal";
@@ -164,12 +172,8 @@ function getErreursSaisieCommande($nom, $rue, $ville, $cp, $mail)
 			$lesErreurs[] = "erreur de code postal";
 		}
 	}
-	if ($mail == "") {
-		$lesErreurs[] = "Il faut saisir le champ mail";
-	} else {
-		if (!estUnMail($mail)) {
-			$lesErreurs[] = "erreur de mail";
-		}
+	if ($ville == "") {
+		$lesErreurs[] = "Il faut saisir le champ ville";
 	}
 	return $lesErreurs;
 }
@@ -237,4 +241,23 @@ function getErreursSaisieConnexion($mail, $pass)
 		$lesErreurs[] = "Il faut saisir le champ pass";
 	}
 	return $lesErreurs;
+}
+function existeUtilisateur($mail): bool
+{
+	try {
+		$monPdo = connexionPDO();
+		$req = $monPdo->prepare("select mail from utilisateur where mail=:mail");
+		$req->bindParam(':mail', $mail);
+		$req->execute();
+		$res = $req->fetchAll(PDO::FETCH_ASSOC);
+		if (empty($res)) {
+			$exist = false;
+		} else {
+			$exist = true;
+		}
+		return $exist;
+	} catch (PDOException $e) {
+		print "Erreur !: " . $e->getMessage();
+		die();
+	}
 }
