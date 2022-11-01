@@ -165,7 +165,11 @@ function getLesCommandesDuMois($mois, $an)
 		die();
 	}
 }
-
+/**
+ * Retourne les produits de la base de donnée
+ * 
+ * @return array $lesProduits Les produits résultant de la requete
+ */
 function getLesProduits()
 {
 	try {
@@ -179,6 +183,12 @@ function getLesProduits()
 		die();
 	}
 }
+/**
+ * Retourne les informations d'un produits
+ * 
+ * @param $idProduit Le produit duquel on souhaite obtenir les informations
+ * @return array $infoProduit Le tableau contenant les informations du produit
+ */
 function getInfoProduit($idProduit)
 {
 	try {
@@ -186,7 +196,8 @@ function getInfoProduit($idProduit)
 		$req = $monPdo->prepare("select id, description, prix, image from produit where id=:id");
 		$req->bindParam(':id', $idProduit);
 		$req->execute();
-		return $req->fetchAll(PDO::FETCH_ASSOC);
+		$infoProduit = $req->fetchAll(PDO::FETCH_ASSOC);
+		return $infoProduit;
 	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 	}

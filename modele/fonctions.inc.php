@@ -63,6 +63,13 @@ function getLesIdProduitsDuPanier()
 {
 	return $_SESSION['produits'];
 }
+/**
+ * Retourne la quantité des prioduits du panier
+ * 
+ * Retourne le tableau des quantités en fonction des produits du panier
+ * 
+ * @return array $_SESSION['qte'] le tableau de la quantité des produits
+ */
 function getLaQte()
 {
 	return $_SESSION['qte'];
@@ -177,6 +184,20 @@ function getErreursSaisieCommande($mail, $nom, $telephone, $adresse, $cp, $ville
 	}
 	return $lesErreurs;
 }
+/**
+ * Retourne un tableau d'erreurs de saisie pour une Inscription
+ *
+ * @param string $nom chaine
+ * @param string $telephone chaîne
+ * @param string $adresse chaîne
+ * @param string $cp chaîne
+ * @param string $ville chaine
+ * @param string $mail chaine
+ * @param string $motdepasse chaine
+ * @param string $motdepass2 chaine
+ * 
+ * @return array $lesErreurs un tableau de chaînes d'erreurs
+ */
 function getErreursSaisieInscription($nom, $prenom, $telephone, $adresse, $cp, $ville, $mail, $motdepasse, $motdepass2)
 {
 	$lesErreurs = array();
@@ -227,6 +248,14 @@ function getErreursSaisieInscription($nom, $prenom, $telephone, $adresse, $cp, $
 	}
 	return $lesErreurs;
 }
+/**
+ * Retourne un tableau d'erreurs de saisie pour une Connexion
+ *
+ * @param string $mail chaine
+ * @param string $pass chaine
+ * 
+ * @return array $lesErreurs un tableau de chaînes d'erreurs
+ */
 function getErreursSaisieConnexion($mail, $pass)
 {
 	$lesErreurs = array();
@@ -242,6 +271,13 @@ function getErreursSaisieConnexion($mail, $pass)
 	}
 	return $lesErreurs;
 }
+/**
+ * Retourne un booléen concernant l'éxistance de l'utilisateur
+ * 
+ * @param $mail Mail de l'utilisateur
+ * 
+ * @return boolean $exist le resultat de la requete de séléction de l'utilisateur
+ */
 function existeUtilisateur($mail): bool
 {
 	try {
