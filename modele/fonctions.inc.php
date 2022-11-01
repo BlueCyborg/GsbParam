@@ -272,6 +272,25 @@ function getErreursSaisieConnexion($mail, $pass)
 	return $lesErreurs;
 }
 /**
+ * Retourne un tableau d'erreurs de saisie pour une Connexion en tant qu'administrateur
+ *
+ * @param string $user chaine
+ * @param string $pass chaine
+ * 
+ * @return array $lesErreurs un tableau de chaînes d'erreurs
+ */
+function getErreursSaisieConnexionAdministrateur($user, $pass)
+{
+	$lesErreurs = array();
+	if ($user == "") {
+		$lesErreurs[] = "Il faut saisir le champ User";
+	}
+	if ($pass == "") {
+		$lesErreurs[] = "Il faut saisir le champ Mot de passe";
+	}
+	return $lesErreurs;
+}
+/**
  * Retourne un booléen concernant l'éxistance de l'utilisateur
  * 
  * @param $mail Mail de l'utilisateur

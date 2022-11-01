@@ -101,7 +101,7 @@ function inscription($nom, $prenom, $telephone, $adresse, $cp, $ville, $email, $
  * 
  * @param String $mail
  * @param String $password
- * @return bool Le booléen correspondant au resultat de la vérification du mot de passe
+ * @return bool $validate Le booléen correspondant au resultat de la vérification du mot de passe
  */
 function connexionCompte(string $mail, string $password): bool
 {
@@ -119,6 +119,32 @@ function connexionCompte(string $mail, string $password): bool
             $validate = false;
         }
 
+        return $validate;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+/**
+ * Fonction permettant de connecter l'administrateur si le mot de passe correspond bien
+ * 
+ * @param String $user
+ * @param String $password
+ * @return bool $validate Le booléen correspondant au resultat de la vérification du mot de passe
+ */
+function connexionCompteAdministrateur(string $user, string $password): bool
+{
+    try {
+        $monPdo = connexionPDO();
+        $req = $monPdo->prepare("select nom, mdp from administrateur where nom=:nom");
+        $req->bindParam(':nom', $user);
+        $req->execute();
+        $leCompte = $req->fetch(PDO::FETCH_ASSOC);
+        if ($leCompte) {
+            $validate = password_verify($password, $leCompte['mdp']);
+        } else {
+            $validate = false;
+        }
         return $validate;
     } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
