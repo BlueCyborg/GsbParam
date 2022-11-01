@@ -115,6 +115,8 @@ function getLesProduitsDuTableau($desIdProduit)
 function creerCommande($mail, $lesIdProduit, $lesQte)
 {
 	try {
+		$idClient = infoUtilisateur($mail);
+		$idClient = $idClient['id'];
 		$monPdo = connexionPDO();
 		// on récupère le dernier id de commande
 		$req = 'select max(id) as maxi from commande';
@@ -123,17 +125,17 @@ function creerCommande($mail, $lesIdProduit, $lesQte)
 		$maxi = $laLigne['maxi']; // on place le dernier id de commande dans $maxi
 		$idCommande = $maxi + 1; // on augmente le dernier id de commande de 1 pour avoir le nouvel idCommande
 		$date = date('Y/m/d'); // récupération de la date système
-		$req = $monPdo->prepare("insert into commande (`id`, `idProd`, `dateCommande`, `nom`, `rue`, `cp`, `ville`, `mailUtilisateur`) values ('$maxi', '$idCommande', '$date', :nom, :rue, :cp, :ville, :mail)");
-		$req->bindParam(':nom', $nom);
-		$req->bindParam(':rue', $rue);
-		$req->bindParam(':cp', $cp);
-		$req->bindParam(':ville', $ville);
-		$req->bindParam(':mail', $mail);
+		$req = $monPdo->prepare("insert into commande (`id`, `idClient`, `dateCommande`) values (:id, :idClient, :date)");
+		$req->bindParam(':id', $idCommande);
+		$req->bindParam(':idClient', $idClient);
+		$req->bindParam(':date', $date);
 		$req->execute();
 		// insertion produits commandés
 		foreach ($lesIdProduit as $unIdProduit) {
-			$req = $monPdo->prepare("insert into contenir (`idCommande`, `idProduit`) values ('$idCommande',:unIdProduit)");
+			$req = $monPdo->prepare("INSERT INTO `contenir`(`idCommande`, `idProduit`, `quantite`) VALUES (:id, :unIdProduit, :laQte)");
+			$req->bindParam(':id', $idCommande);
 			$req->bindParam(':unIdProduit', $unIdProduit);
+			$req->bindParam(':laQte', $lesQte[$unIdProduit]);
 			$req->execute();
 		}
 	} catch (PDOException $e) {

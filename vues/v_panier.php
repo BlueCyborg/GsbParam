@@ -31,7 +31,13 @@
 				<br>
 				<br>
 				<p>Quantité
-					<input type="number" name="qte[<?= $id ?>]" min="1" max="100" value="1" required />
+					<?php
+					//Permet de restituer la quantitée du produit précédement choisie par l'utilisateur
+					$value = 1;
+					if (isset($_SESSION['qte'])) {
+						$value = $_SESSION['qte'][$id];
+					} ?>
+					<input type="number" name="qte[<?= $id ?>]" min="1" max="100" value="<?= $value ?>" required />
 				</p>
 			</div>
 		<?php
