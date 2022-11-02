@@ -10,11 +10,24 @@
 		// affichage d'un produit avec ses informations
 	?>
 		<div class="card">
-			<div class="photoCard"><img src="<?php echo $image ?>" alt=image /></div>
-			<div class="descrCard"><?php echo $description ?></div>
-			<div class="prixCard"><?php echo $prix . "€" ?></div>
-			<div class="imgCard"><a href="index.php?uc=voirProduits&produit=<?php echo $id ?>&action=ajouterAuPanier">
-					<img src="images/mettrepanier.png" TITLE="Ajouter au panier" alt="Mettre au panier"> </a></div>
+			<div class="photoCard"><img src="<?= $image ?>" alt=image /></div>
+			<div class="descrCard"><?= $description ?></div>
+			<div class="prixCard"><?= $prix . "€" ?></div>
+			<div class="imgCard">
+				<?php
+				if (isset($_SESSION['administrateur'])) { ?>
+					<a href="index.php?uc=administrer&produit=<?= $id ?>&action=modifier">
+						<img src="images/modifier.png" width="40" TITLE="Modifier" alt="Modifier">
+					</a>
+					<a style="text-decoration: none;" href="index.php?uc=administrer&produit=<?= $id ?>&action=supprimer" onclick="return confirm('Voulez-vous vraiment supprimer le produit ?');">
+						<button type="button">Supprimer</button>
+					</a>
+				<?php } else { ?>
+					<a href="index.php?uc=voirProduits&produit=<?= $id ?>&action=ajouterAuPanier">
+						<img src="images/mettrepanier.png" TITLE="Ajouter au panier" alt="Mettre au panier">
+					</a>
+				<?php } ?>
+			</div>
 		</div>
 	<?php
 	} // fin du foreach qui parcourt les produits

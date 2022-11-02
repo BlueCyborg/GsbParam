@@ -193,7 +193,7 @@ function getInfoProduit($idProduit)
 {
 	try {
 		$monPdo = connexionPDO();
-		$req = $monPdo->prepare("select id, description, prix, image from produit where id=:id");
+		$req = $monPdo->prepare("select id, description, prix, image, idCategorie from produit where id=:id");
 		$req->bindParam(':id', $idProduit);
 		$req->execute();
 		$infoProduit = $req->fetchAll(PDO::FETCH_ASSOC);
