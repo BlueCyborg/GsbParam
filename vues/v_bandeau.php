@@ -43,3 +43,5 @@
 		</form>
 	</div>
 </nav>
+
+<hr width="75%" style="margin-top: 0.5%;">
