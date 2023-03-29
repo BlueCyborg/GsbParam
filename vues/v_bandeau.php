@@ -7,7 +7,6 @@
 			<li class="nav-item active">
 				<a class="nav-link" href="index.php?uc=accueil">Accueil</a>
 			</li>
-
 			<?php if (isset($_SESSION['administrateur'])) { ?>
 				<li class="nav-item">
 					<a class="nav-link" href="index.php?uc=administrer&action=voirCategories">Produits par catégorie</a>
@@ -31,7 +30,6 @@
 			<?php } ?>
 		</ul>
 		<form class="form-inline my-2 my-lg-0">
-
 			<div class="container">
 				<?php if (isset($_SESSION['user'])) { ?>
 					<a class="btn btn-outline-success my-2 my-sm-0" href="index.php?uc=connexion&action=deconnexion">Déconnexion</a>

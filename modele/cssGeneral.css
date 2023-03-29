@@ -4,6 +4,7 @@ html {
 
 body {
 	padding: 0% 5%;
+	background-color: #e3f2fd;
 }
 
 #accueil {
@@ -12,7 +13,6 @@ body {
 	padding-top: 7%;
 	color: #33d64c;
 }
-
 
 fieldset {
 	display: block;
@@ -131,12 +131,6 @@ input[type="submit"] {
 	bottom: 80px;
 }
 
-div.space {
-	width: 4px;
-	height: auto;
-	display: inline-block;
-}
-
 div.card {
 	position: relative;
 	width: 180px;
@@ -169,4 +163,27 @@ div.prixCard {
 div.imgCard {
 	position: absolute;
 	bottom: 5px;
+}
+
+.nav-link {
+	display: inline;
+	position: relative;
+	text-decoration: none;
+
+}
+
+.nav-link:after {
+	content: '';
+	display: block;
+	position: absolute;
+	bottom: 2px;
+	width: 0%;
+	left: 0px;
+	height: 2px;
+	transition: 0.25s cubic-bezier(0.72, -0.01, 0.19, 0.92);
+	background: #377a49;
+}
+
+.nav-link:hover:after {
+	width: 100%;
 }
