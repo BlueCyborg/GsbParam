@@ -3,7 +3,7 @@
 	<img class="navbar-brand" src="images/gsb_logo.png" alt="GsbLogo" title="GsbLogo" width="100px" />
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav mr-auto">
+		<ul class="navbar-nav m-auto">
 			<li class="nav-item active">
 				<a class="nav-link" href="index.php?uc=accueil">Accueil</a>
 			</li>
@@ -18,8 +18,16 @@
 					<a class="nav-link" href="index.php?uc=administrer&action=creerProduit">Creer un produit</a>
 				</li>
 			<?php } else { ?>
-				<li class="nav-item">
-					<a class="nav-link" href="index.php?uc=voirProduits&action=voirCategories">Nos produits par catégorie</a>
+				<li class="nav-item dropdown">
+					<a class="nav-link" href="index.php?uc=voirProduits&action=voirCategories" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						Nos produits par catégorie
+					</a>
+					<ul class="dropdown-menu">
+						<?php $categories = getLesCategories();
+						foreach ($categories as $uneCategorie) {
+						?> <li><a class="dropdown-item" href="#"><?php echo htmlspecialchars($uneCategorie['libelle']); ?></a></li>
+						<?php } ?>
+					</ul>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="index.php?uc=voirProduits&action=nosProduits">Nos produits</a>
@@ -43,5 +51,4 @@
 		</form>
 	</div>
 </nav>
-
-<hr width="75%" style="margin-top: 0.5%;">
+<hr width="75%" style="margin: auto;">
