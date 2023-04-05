@@ -1,3 +1,9 @@
+<?php
+if (getLesInfosCategorie($_GET['categorie'])['libelle']) { //On vérifie si la catégorie existe
+?> <h3><span style="color:green;">Produits de la catégorie :</span>
+		<?php echo htmlspecialchars(getLesInfosCategorie($_GET['categorie'])['libelle']) ?> </h3>
+<?php }
+?>
 <div id="produits">
 
 	<?php

@@ -25,7 +25,7 @@
 					<ul class="dropdown-menu">
 						<?php $categories = getLesCategories();
 						foreach ($categories as $uneCategorie) {
-						?> <li><a class="dropdown-item" href="#"><?php echo htmlspecialchars($uneCategorie['libelle']); ?></a></li>
+						?> <li><a class="dropdown-item" href="index.php?uc=voirProduits&categorie=<?= htmlspecialchars($uneCategorie['id']) ?>&action=voirProduits"><?= htmlspecialchars($uneCategorie['libelle']); ?></a></li>
 						<?php } ?>
 					</ul>
 				</li>
@@ -52,3 +52,4 @@
 	</div>
 </nav>
 <hr width="75%" style="margin: auto;">
+<br>

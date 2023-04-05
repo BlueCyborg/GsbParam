@@ -3,6 +3,7 @@
 initPanier(); // se charge de réserver un emplacement mémoire pour le panier si pas encore fait
 $action = $_REQUEST['action'];
 switch ($action) {
+		//A REFLECHIR POUR LE SUPPRIMER
 	case 'voirCategories': {
 			$lesCategories = getLesCategories();
 			include("vues/v_categories.php");
@@ -12,11 +13,6 @@ switch ($action) {
 			$lesCategories = getLesCategories();
 			include("vues/v_categories.php");
 			$categorie = $_REQUEST['categorie'];
-			for ($i = 0; $i < count($lesCategories); $i++) {
-				if ($lesCategories[$i]['id'] == $categorie) {
-					echo "Produits de la catégorie " . $lesCategories[$i]['libelle'];
-				}
-			}
 			$lesProduits = getLesProduitsDeCategorie($categorie);
 			include("vues/v_produitsDeCategorie.php");
 			break;
