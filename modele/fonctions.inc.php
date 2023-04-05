@@ -316,16 +316,3 @@ function existeUtilisateur($mail): bool
 		die();
 	}
 }
-
-function getCategories(): array
-{
-	try {
-		$monPdo = connexionPDO();
-		$req = 'SELECT `id`,`libelle` FROM `categorie`;';
-		$res = $monPdo->query($req);
-		$result = $res->fetchAll(PDO::FETCH_ASSOC);
-		return $result;
-	} catch (PDOException $e) {
-		throw $e;
-	}
-}
