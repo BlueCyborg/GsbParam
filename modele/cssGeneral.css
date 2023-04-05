@@ -94,15 +94,18 @@ input[type="submit"] {
 	text-decoration: none;
 }
 
-#categories li {
+#categories {
 	list-style-type: none;
 	list-style-image: none;
 	/*float:left; */
 	margin-right: 1px;
-	border: 1px solid #600;
 	width: 100px;
 	text-align: center;
-	background: #ccff11;
+	background-color: #ffffff;
+}
+
+#categories option{
+	border: 1px solid rgb(13, 170, 13);
 }
 
 
