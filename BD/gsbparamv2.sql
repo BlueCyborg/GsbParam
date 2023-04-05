@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : mer. 05 avr. 2023 à 14:26
+-- Généré le : mer. 05 avr. 2023 à 14:51
 -- Version du serveur : 10.6.5-MariaDB
 -- Version de PHP : 8.0.13
 
@@ -164,11 +164,11 @@ CREATE TABLE IF NOT EXISTS `marque` (
 
 DROP TABLE IF EXISTS `posseder`;
 CREATE TABLE IF NOT EXISTS `posseder` (
-  `id` char(32) COLLATE utf8mb3_bin NOT NULL,
+  `id_contenance` char(32) COLLATE utf8mb3_bin NOT NULL,
   `id_produit` char(32) COLLATE utf8mb3_bin NOT NULL,
   `stock` int(11) NOT NULL,
   `prix` int(11) NOT NULL,
-  PRIMARY KEY (`id`,`id_produit`),
+  PRIMARY KEY (`id_contenance`,`id_produit`),
   KEY `POSSEDER_produit0_FK` (`id_produit`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
@@ -292,13 +292,13 @@ ALTER TABLE `contenance`
 --
 ALTER TABLE `contenir`
   ADD CONSTRAINT `contenir_commande_FK` FOREIGN KEY (`idCommande`) REFERENCES `commande` (`id`),
-  ADD CONSTRAINT `contenir_produit0_contenance1_FK` FOREIGN KEY (`idProduit`,`id_contenance`) REFERENCES `posseder` (`id_produit`, `id`);
+  ADD CONSTRAINT `contenir_produit0_contenance1_FK` FOREIGN KEY (`idProduit`,`id_contenance`) REFERENCES `posseder` (`id_produit`, `id_contenance`);
 
 --
 -- Contraintes pour la table `posseder`
 --
 ALTER TABLE `posseder`
-  ADD CONSTRAINT `POSSEDER_contenance_FK` FOREIGN KEY (`id`) REFERENCES `contenance` (`id`),
+  ADD CONSTRAINT `POSSEDER_contenance_FK` FOREIGN KEY (`id_contenance`) REFERENCES `contenance` (`id`),
   ADD CONSTRAINT `POSSEDER_produit0_FK` FOREIGN KEY (`id_produit`) REFERENCES `produit` (`id`);
 
 --

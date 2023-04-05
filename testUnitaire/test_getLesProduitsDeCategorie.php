@@ -10,7 +10,7 @@ function getLesProduitsDeCategorie()
 {
     try {
         $monPdo = connexionPDO();
-        $req = 'select id, description,prix from produit where idCategorie = "CH" ';
+        $req = 'select id, description from produit where idCategorie = "CH" ';
         $res = $monPdo->query($req);
         $lesLignes = $res->fetchAll(PDO::FETCH_ASSOC);
         return $lesLignes;
