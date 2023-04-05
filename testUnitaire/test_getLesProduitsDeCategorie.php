@@ -14,7 +14,8 @@ function getLesProduitsDeCategorie()
         $res = $monPdo->query($req);
         $lesLignes = $res->fetchAll(PDO::FETCH_ASSOC);
         return $lesLignes;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
