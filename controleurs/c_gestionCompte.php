@@ -10,21 +10,25 @@ switch ($action) {
                 if (count($msgErreurs) != 0) {
                     //S'il y a des erreurs alors on les affiches
                     include("vues/v_erreurs.php");
-                } else {
+                }
+                else {
                     $connexion = connexionCompte($user, $password);
                     if (empty($connexion)) {
                         $msgErreurs[] = "Vous n'êtes pas inscrit.";
                         include("vues/v_erreurs.php");
-                    } else {
+                    }
+                    else {
                         $message = "Vous êtes désormais connecté";
                         include_once("vues/v_message.php");
                         $_SESSION['user'] = $user;
                     }
                 }
-            } elseif (isset($_SESSION['user']) and !empty($_SESSION['user'])) {
+            }
+            elseif (isset($_SESSION['user']) and !empty($_SESSION['user'])) {
                 $message = "Vous est déjà authentifié";
                 include("vues/v_message.php");
-            } else {
+            }
+            else {
                 include("vues/v_connexion.php");
             }
             break;
@@ -37,7 +41,6 @@ switch ($action) {
             break;
         }
     case 'inscription': {
-            //Si les informations sont entrées dans le formulaire
             if (isset($_REQUEST['nom']) && isset($_REQUEST['prenom']) && isset($_REQUEST['adresse']) && isset($_REQUEST['cp']) && isset($_REQUEST['ville']) && isset($_REQUEST['email']) && isset($_REQUEST['password']) && isset($_REQUEST['repeatpassword'])) {
                 $nom = $_REQUEST['nom'];
                 $prenom = $_REQUEST['prenom'];
@@ -52,18 +55,21 @@ switch ($action) {
                 if (count($msgErreurs) != 0) {
                     //S'il y a des erreurs alors on les affiches
                     include("vues/v_erreurs.php");
-                } else {
+                }
+                else {
                     //Si l'utilisateur existe déjà alors on ne lui permet pas l'inscription
                     $exist = existeUtilisateur(htmlspecialchars($email));
                     if ($exist == 1) {
                         $msgErreurs[] = "L'email existe déjà.";
                         include("vues/v_erreurs.php");
-                    } else {
+                    }
+                    else {
                         inscription($nom, $prenom, $telephone, $adresse, $cp, $ville, $email, $password);
                         echo 'Inscription réalisé avec succès.';
                     }
                 }
-            } else {
+            }
+            else {
                 //Si les aucunes informations n'est rentré dans le formulaire alors on le propose
                 include("vues/v_inscription.php");
             }

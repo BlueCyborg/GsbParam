@@ -83,18 +83,18 @@ function inscription($nom, $prenom, $telephone, $adresse, $cp, $ville, $email, $
 
         $monPdo = connexionPDO();
 
-        $req = $monPdo->prepare("INSERT INTO `login` (mdp, mail) VALUES (:mdp, :mail)");
+        $req = $monPdo->prepare("INSERT INTO login (mdp, mail) VALUES (:mdp, :mail)");
         $req->bindParam(':mail', $email);
         $req->bindParam(':mdp', $password);
         $req->execute();
 
-        $req = "SELECT MAX(id) AS maxi FROM `login` ";
+        $req = "SELECT MAX(id) AS maxi FROM login";
         $res = $monPdo->query($req);
         $laLigne = $res->fetch();
         $maxi = $laLigne['maxi'];
         $idlog = $maxi;
 
-        $req = $monPdo->prepare("INSERT INTO utilisateur (id, nom, prenom, telephone, adresse, cp, ville, id_login) VALUES (:id, :nom, :prenom, :telephone, :adresse, :cp, :ville, :id_login)");
+        $req = $monPdo->prepare("INSERT INTO utilisateur (nom, prenom, telephone, adresse, cp, ville, id_login) VALUES (:nom, :prenom, :telephone, :adresse, :cp, :ville, :id_login)");
         $req->bindParam(':nom', $nom);
         $req->bindParam(':prenom', $prenom);
         $req->bindParam(':telephone', $telephone);
@@ -106,10 +106,13 @@ function inscription($nom, $prenom, $telephone, $adresse, $cp, $ville, $email, $
 
         $uneInscription = $req->fetchAll(PDO::FETCH_ASSOC);
         return $uneInscription;
+
     }
     catch (\Throwable $e) {
         echo 'Erreur : ' . $e;
     }
+
+
 }
 /**
  * Fonction permettant de connecter l'utilisateur si le mot de passe correspond bien à l'adresse mail
@@ -122,7 +125,7 @@ function connexionCompte(string $mail, string $password): bool
 {
     try {
         $monPdo = connexionPDO();
-        $req = $monPdo->prepare("select mail, mdp from utilisateur where mail=:mail");
+        $req = $monPdo->prepare("select mail, mdp from login where mail=:mail");
         $req->bindParam(':mail', $mail);
         $req->execute();
 
