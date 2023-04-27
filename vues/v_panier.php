@@ -10,7 +10,7 @@
 			$id = htmlspecialchars($unProduit['id']);
 			$description = htmlspecialchars($unProduit['description']);
 			$image = htmlspecialchars($unProduit['image']);
-			$prix = htmlspecialchars($unProduit['prix']);
+			//$prix = htmlspecialchars($unProduit['prix']);
 			// affichage
 		?>
 
@@ -20,7 +20,7 @@
 					<img src="<?php echo $image ?>" alt="image descriptive" />
 				</div>
 				<div class="descrCard"><?php echo	$description; ?> </div>
-				<div class="prixCard"><?php echo $prix . "€" ?></div>
+				<div class="prixCard"><!--<?php echo $prix . "€" ?>--></div>
 				<div class="imgCard">
 					<a href="index.php?uc=gererPanier&produit=<?php echo $id ?>&action=supprimerUnProduit" onclick="return confirm('Voulez-vous vraiment retirer cet article ?');">
 						<img src="images/retirerpanier.png" TITLE="Retirer du panier" alt="retirer du panier">
@@ -30,7 +30,7 @@
 				<br>
 				<br>
 				<br>
-				<p>Quantité
+				<!--<p>Quantité
 					<?php
 					//Permet de restituer la quantitée du produit précédement choisie par l'utilisateur
 					$value = 1;
@@ -38,7 +38,7 @@
 						$value = $_SESSION['qte'][$id];
 					} ?>
 					<input type="number" name="qte[<?= $id ?>]" min="1" max="100" value="<?= $value ?>" required />
-				</p>
+				</p>-->
 			</div>
 		<?php
 		}

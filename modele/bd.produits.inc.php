@@ -24,8 +24,7 @@ function getLesCategories()
 		$res = $monPdo->query($req);
 		$lesLignes = $res->fetchAll(PDO::FETCH_ASSOC);
 		return $lesLignes;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -45,8 +44,7 @@ function getLesInfosCategorie($idCategorie)
 		$req->execute();
 		$laLigne = $req->fetch(PDO::FETCH_ASSOC);
 		return $laLigne;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -68,8 +66,7 @@ function getLesProduitsDeCategorie($idCategorie)
 		$req->execute();
 		$lesLignes = $req->fetchAll(PDO::FETCH_ASSOC);
 		return $lesLignes;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -88,7 +85,7 @@ function getLesProduitsDuTableau($desIdProduit)
 		$lesProduits = array();
 		if ($nbProduits != 0) {
 			foreach ($desIdProduit as $unIdProduit) {
-				$req = $monPdo->prepare("select id, description, prix, image, idCategorie from produit where id = :id");
+				$req = $monPdo->prepare("select id, description, image, idCategorie from produit where id = :id");
 				$req->bindParam(':id', $unIdProduit);
 				$req->execute();
 				$unProduit = $req->fetch(PDO::FETCH_ASSOC);
@@ -96,8 +93,7 @@ function getLesProduitsDuTableau($desIdProduit)
 			}
 		}
 		return $lesProduits;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -142,8 +138,7 @@ function creerCommande($mail, $lesIdProduit, $lesQte)
 			$req->bindParam(':laQte', $lesQte[$unIdProduit]);
 			$req->execute();
 		}
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -165,8 +160,7 @@ function getLesCommandesDuMois($mois, $an)
 		$req->execute();
 		$lesCommandes = $req->fetchAll(PDO::FETCH_ASSOC);
 		return $lesCommandes;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -184,8 +178,7 @@ function getLesProduits()
 		$res = $monPdo->query($req);
 		$lesProduits = $res->fetchAll(PDO::FETCH_ASSOC);
 		return $lesProduits;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -205,8 +198,7 @@ function getInfoProduit($idProduit)
 		$req->execute();
 		$infoProduit = $req->fetchAll(PDO::FETCH_ASSOC);
 		return $infoProduit;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 	}
 }
