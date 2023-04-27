@@ -61,7 +61,7 @@ function getLesProduitsDeCategorie($idCategorie)
 {
 	try {
 		$monPdo = connexionPDO();
-		$req = $monPdo->prepare("select id, description, prix, image, idCategorie from produit where idCategorie = :id");
+		$req = $monPdo->prepare("select id, description, image, idCategorie from produit where idCategorie = :id");
 		$req->bindParam(':id', $idCategorie);
 		$req->execute();
 		$lesLignes = $req->fetchAll(PDO::FETCH_ASSOC);

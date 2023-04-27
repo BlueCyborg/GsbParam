@@ -6,9 +6,7 @@
  * @version    2.0
  * @date juin 2021
  * @details contient les fonctions qui ne font pas accès aux données de la BD
-
  * regroupe les fonctions pour gérer le panier, et les erreurs de saisie dans le formulaire de commande
-
  * @package  GsbParam\util
  */
 /**
@@ -47,7 +45,8 @@ function ajouterAuPanier($idProduit)
 	$ok = true;
 	if (in_array($idProduit, $_SESSION['produits'])) {
 		$ok = false;
-	} else {
+	}
+	else {
 		$_SESSION['produits'][] = $idProduit; // l'indice n'est pas précisé : il sera automatiquement celui qui suit le dernier occupé
 	}
 	return $ok;
@@ -140,7 +139,7 @@ function estEntier($valeur)
  */
 function estUnMail($mail)
 {
-	return  preg_match('#^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$#', $mail);
+	return preg_match('#^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$#', $mail);
 }
 /**
  * Retourne un tableau d'erreurs de saisie pour une commande
@@ -158,7 +157,8 @@ function getErreursSaisieCommande($mail, $nom, $telephone, $adresse, $cp, $ville
 	$lesErreurs = array();
 	if ($mail == "") {
 		$lesErreurs[] = "Il faut saisir le champ mail";
-	} else {
+	}
+	else {
 		if (!estUnMail($mail)) {
 			$lesErreurs[] = "erreur de mail";
 		}
@@ -174,7 +174,8 @@ function getErreursSaisieCommande($mail, $nom, $telephone, $adresse, $cp, $ville
 	}
 	if ($cp == "") {
 		$lesErreurs[] = "Il faut saisir le champ Code postal";
-	} else {
+	}
+	else {
 		if (!estUnCp($cp)) {
 			$lesErreurs[] = "erreur de code postal";
 		}
@@ -221,14 +222,16 @@ function getErreursSaisieInscription($nom, $prenom, $telephone, $adresse, $cp, $
 	}
 	if ($cp == "") {
 		$lesErreurs[] = "Il faut saisir le champ Code postal";
-	} else {
+	}
+	else {
 		if (!estUnCp($cp)) {
 			$lesErreurs[] = "erreur de code postal";
 		}
 	}
 	if ($mail == "") {
 		$lesErreurs[] = "Il faut saisir le champ mail";
-	} else {
+	}
+	else {
 		if (!estUnMail($mail)) {
 			$lesErreurs[] = "erreur de mail";
 		}
@@ -238,7 +241,8 @@ function getErreursSaisieInscription($nom, $prenom, $telephone, $adresse, $cp, $
 	}
 	if ($motdepass2 == "") {
 		$lesErreurs[] = "Il faut saisir le champ mot de passe";
-	} else {
+	}
+	else {
 		if ($motdepass2 != $motdepasse) {
 			$lesErreurs[] = "Les mots de passe ne sont pas identiques";
 		}
@@ -261,7 +265,8 @@ function getErreursSaisieConnexion($mail, $pass)
 	$lesErreurs = array();
 	if ($mail == "") {
 		$lesErreurs[] = "Il faut saisir le champ mail";
-	} else {
+	}
+	else {
 		if (!estUnMail($mail)) {
 			$lesErreurs[] = "Erreur: votre saisie ne correspond pas à un mail";
 		}
@@ -301,17 +306,19 @@ function existeUtilisateur($mail): bool
 {
 	try {
 		$monPdo = connexionPDO();
-		$req = $monPdo->prepare("select mail from utilisateur where mail=:mail");
+		$req = $monPdo->prepare("select mail from login where mail=:mail");
 		$req->bindParam(':mail', $mail);
 		$req->execute();
 		$res = $req->fetchAll(PDO::FETCH_ASSOC);
 		if (empty($res)) {
 			$exist = false;
-		} else {
+		}
+		else {
 			$exist = true;
 		}
 		return $exist;
-	} catch (PDOException $e) {
+	}
+	catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
