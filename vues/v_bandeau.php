@@ -17,6 +17,15 @@
 				<li class="nav-item">
 					<a class="nav-link" href="index.php?uc=administrer&action=creerProduit">Creer un produit</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="index.php?uc=administrer&action=suiviCommande">Commande</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="index.php?uc=administrer&action=associerProduit">Association produit</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="index.php?uc=administrer&action=gestionStock">Stock</a>
+				</li>
 			<?php } else { ?>
 				<li class="nav-item dropdown">
 					<a class="nav-link" href="index.php?uc=voirProduits&action=voirCategories" role="button" data-bs-toggle="dropdown" aria-expanded="false">

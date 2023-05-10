@@ -5,14 +5,14 @@
 	foreach ($lesProduits as $unProduit) { 	// récupération des informations du produit
 		$id = $unProduit['id'];
 		$description = $unProduit['description'];
-		//$prix = $unProduit['prix'];
+		$prix = $unProduit['prix'];
 		$image = $unProduit['image'];
 		// affichage d'un produit avec ses informations
 	?>
 		<div class="card">
 			<div class="photoCard"><img src="<?= $image ?>" alt=image /></div>
 			<div class="descrCard"><?= $description ?></div>
-			<div class="prixCard"><!--<?= $prix . "€" ?>--></div>
+			<div class="prixCard">à partir de <?= $prix . "€" ?></div>
 			<div class="imgCard">
 				<?php
 				if (isset($_SESSION['administrateur'])) { ?>

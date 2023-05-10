@@ -27,8 +27,7 @@ function connexionPDO()
         $conn = new PDO("mysql:host=$serveur;dbname=$bd", $login, $mdp, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''));
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $conn;
-    }
-    catch (PDOException $e) {
+    } catch (PDOException $e) {
         print "Erreur de connexion PDO ";
         die();
     }
@@ -44,12 +43,14 @@ function infoUtilisateur($mail): array
     try {
         $monPdo = connexionPDO();
 
-        $req = $monPdo->prepare("select id, nom, prenom, telephone, adresse, cp, ville from utilisateur where mail = :mail");
+        $req = $monPdo->prepare("SELECT u.id as ID, nom, prenom, telephone, adresse, cp, ville FROM utilisateur u
+        INNER JOIN login l
+        ON u.id_login=l.id
+        WHERE  mail = :mail");
         $req->bindParam(':mail', $mail);
         $req->execute();
         return $req->fetch(PDO::FETCH_ASSOC);
-    }
-    catch (PDOException $e) {
+    } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
@@ -106,13 +107,9 @@ function inscription($nom, $prenom, $telephone, $adresse, $cp, $ville, $email, $
 
         $uneInscription = $req->fetchAll(PDO::FETCH_ASSOC);
         return $uneInscription;
-
-    }
-    catch (\Throwable $e) {
+    } catch (\Throwable $e) {
         echo 'Erreur : ' . $e;
     }
-
-
 }
 /**
  * Fonction permettant de connecter l'utilisateur si le mot de passe correspond bien à l'adresse mail
@@ -133,14 +130,12 @@ function connexionCompte(string $mail, string $password): bool
 
         if ($leCompte) {
             $validate = password_verify($password, $leCompte['mdp']);
-        }
-        else {
+        } else {
             $validate = false;
         }
 
         return $validate;
-    }
-    catch (PDOException $e) {
+    } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
@@ -162,13 +157,11 @@ function connexionCompteAdministrateur(string $user, string $password): bool
         $leCompte = $req->fetch(PDO::FETCH_ASSOC);
         if ($leCompte) {
             $validate = password_verify($password, $leCompte['mdp']);
-        }
-        else {
+        } else {
             $validate = false;
         }
         return $validate;
-    }
-    catch (PDOException $e) {
+    } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }

@@ -22,7 +22,31 @@ switch ($action) {
 			break;
 		}
 	case 'passerCommande': {
-			$_SESSION['qte'] = $_REQUEST['qte'];
+			$n = nbProduitsDuPanier();
+
+			if (isset($_SESSION['user'])) {
+				if (isset($_POST['commander'])) {
+					$info = infoUtilisateur($_SESSION['user']);
+					creerCommande2($info['ID']);
+					for ($i = 1; $i <= $n; $i++) {
+						ajoutProduitCommande($_POST['id' . $i], $_POST['qte' . $i], $_POST['contenance' . $i]);
+					}
+					echo 'Commande confirmer !!';
+					supprimerPanier();
+				} else {
+					if (isset($_POST['retour'])) {
+						$desIdProduit = getLesIdProduitsDuPanier();
+						$lesProduitsDuPanier = getLesProduitsDuTableau($desIdProduit);
+						include("vues/v_panier.php");
+					} else {
+						include("vues/v_passerCommande.php");
+					}
+				}
+			} else {
+				$msgErreurs[] = "Vous devez être connecté";
+				include("vues/v_erreurs.php");
+			}
+			/*
 			if (isset($_SESSION['user'])) {
 				$n = nbProduitsDuPanier();
 				if ($n > 0) {
@@ -47,6 +71,7 @@ switch ($action) {
 				$msgErreurs[] = "Vous devez être connecté";
 				include("vues/v_erreurs.php");
 			}
+			*/
 			break;
 		}
 	case 'confirmerCommande': {
