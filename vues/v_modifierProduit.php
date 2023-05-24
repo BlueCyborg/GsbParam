@@ -58,9 +58,9 @@
             }
             ?>
         </select><br>
-        <input type="submit" name="submit" value="Modifier">
+        <input type="submit" name="submit" value="Modifier"><br>
     <?php
     }
     ?>
-
+<a href="index.php?uc=administrer&produit=<?= $_REQUEST['produit'] ?>&action=ajoutContenance">Ajouter une contenance à ce produit</a>
 </form>

@@ -12,7 +12,6 @@ foreach ($contenancesProd as $uneContenancesProd) {
         <input name="prix" type="text" value="<?= $uneContenancesProd['prix'] ?>"><br>
         <input type="submit" value="Modifier cette contenance" name="modifier">
         <input type="submit" value="Supprimer cette contenance" name="supprimer"><br>
-        <a href="index.php?uc=administrer&produit=<?= $_REQUEST['produit'] ?>&action=ajoutContenance">Ajouter une contenance à ce produit</a>
     </form>
 <?php
 }
