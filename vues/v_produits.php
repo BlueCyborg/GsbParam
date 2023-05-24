@@ -16,6 +16,7 @@
 			<div class="imgCard">
 				<?php
 				if (isset($_SESSION['administrateur'])) { ?>
+
 					<a href="index.php?uc=administrer&produit=<?= $id ?>&action=modifier">
 						<img src="images/modifier.png" width="40" TITLE="Modifier" alt="Modifier">
 					</a>

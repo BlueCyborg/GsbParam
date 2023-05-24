@@ -29,24 +29,59 @@ if (isset($_SESSION['administrateur'])) {
         case 'creerProduit': {
                 //Si les valeurs sont envoyés alors on crée le produit
                 if (isset($_POST['submit'])) {
-                    creerProduit(
-                        $_POST['id'],
-                        $_POST['description'],
-                        $_POST['image'],
-                        $_POST['categorie'],
-                        $_POST['marque'],
-                        $_POST['stock'],
-                        $_POST['prix'],
-                        $_POST['contenance'],
-                        $_POST['unite']
-                    );
-                    echo 'Le Produit à bien été crée !';
+                    if (!existeProduit($_POST['id'])) {
+                        creerProduit(
+                            $_POST['id'],
+                            $_POST['description'],
+                            $_POST['image'],
+                            $_POST['categorie'],
+                            $_POST['marque'],
+                            $_POST['lesContenances'],
+                            $_POST['prix']
+                        );
+
+                        echo 'Le Produit à bien été crée !';
+                    } else {
+                        echo 'Le produit existe déjà !';
+                    }
                 } else {
+                    $contenances = getContenances();
                     $categories = getLesCategories();
                     $marques = getLesMarques();
                     $unites = getLesUnites();
                     include("vues/v_creerProduit.php");
                 }
+                break;
+            }
+
+        case 'creerContenance': {
+
+                if (isset($_POST['creer'])) {
+                    var_dump($_POST['laContenance']);
+                    var_dump($_POST['unite']);
+                    if (!existeContenance($_POST['laContenance'], $_POST['unite'])) {
+                        creerContenance($_POST['laContenance'], $_POST['unite']);
+                    } else {
+                        echo 'Cette contenance exite déjà !';
+                    }
+                } else {
+                    $unites = getLesUnites();
+                    include("vues/v_creerContenance.php");
+                }
+
+                break;
+            }
+
+        case 'modifierContenance': {
+
+                if (isset($_POST['modifier'])) {
+                    var_dump($_POST['contenance'], $_POST['id_contenance'], $_POST['stock'], $_POST['prix'], $_POST['idProd']);
+                    updateStock($_POST['idProd'], $_POST['id_contenance'], $_POST['stock']);
+                    updatePrix($_POST['idProd'], $_POST['id_contenance'], $_POST['prix']);
+                } else {
+                    supprimerPosseder($_POST['idProd'], $_POST['id_contenance']);
+                }
+
                 break;
             }
         case 'modifier': {
@@ -58,19 +93,20 @@ if (isset($_SESSION['administrateur'])) {
                         $_POST['description'],
                         $_POST['marque'],
                         $_POST['categorie'],
-                        $_POST['prix'],
-                        $_POST['stock'],
-                        $_POST['unite'],
-                        $_POST['contenance']
                     );
                     echo 'Le Produit à bien été modifié !';
                 } else {
+                    $contenances = getContenances();
+                    $contenancesProd = getContenancesProd($_REQUEST['produit']);
+                    //var_dump($contenancesProd);
                     $categories = getLesCategories();
                     $marques = getLesMarques();
                     $unites = getLesUnites();
                     $infoProd = getInfoProduit($_REQUEST['produit']);
-                    var_dump($infoProd);
+                    //var_dump($infoProd);
                     include("vues/v_modifierProduit.php");
+
+                    include("vues/v_contenancesProd.php");
                 }
                 break;
             }
@@ -95,6 +131,21 @@ if (isset($_SESSION['administrateur'])) {
                     include("vues/v_tabAssociationProd.php");
                 }
 
+
+                break;
+            }
+
+        case 'ajoutContenance': {
+                if (isset($_POST['submit'])) {
+                    var_dump($_REQUEST['produit']);
+                    var_dump($_REQUEST['lesContenances']);
+                    var_dump($_REQUEST['stock']);
+                    var_dump($_REQUEST['prix']);
+                    ajouterPosseder($_REQUEST['lesContenances'], $_REQUEST['produit'], $_REQUEST['stock'], $_REQUEST['prix']);
+                } else {
+                    $contenances = getContenances();
+                    include("vues/v_ajoutContenance.php");
+                }
 
                 break;
             }
@@ -147,7 +198,27 @@ if (isset($_SESSION['administrateur'])) {
                 break;
             }
         case 'gestionStock': {
-                echo 'gestion des stocks';
+
+                if (isset($_POST['modifStock'])) {
+                    $lesStockProd = getStockProd($_POST['produitStock']);
+                    include("vues/v_modifStock.php");
+                } else {
+                    $lesProduits = getLesProduits();
+                    include("vues/v_produitStock.php");
+                }
+
+                break;
+            }
+        case 'modifierStock': {
+
+                var_dump($_POST['idprod']);
+                var_dump($_POST['idContenance']);
+                var_dump($_POST['contenance']);
+                var_dump($_POST['libelle']);
+                var_dump($_POST['stock']);
+
+                updateStock($_POST['idprod'], $_POST['idContenance'], $_POST['stock']);
+
                 break;
             }
         case 'supprimer': {

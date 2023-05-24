@@ -165,9 +165,10 @@ function supprimerProduit($idProduit)
  * @param $idCat chaine
  * @return bool Crée le produit dans la base de donnée
  */
-function creerProduit($id, $description, $image, $idCat, $idMarque, $stock, $prix, $contenance, $unite)
+function creerProduit($id, $description, $image, $idCat, $idMarque, $idContenance, $prix)
 {
     try {
+
         $monPdo = connexionPDOAdmin();
         $req = $monPdo->prepare("INSERT INTO `produit`(`id`, `description`, `image`, `idCategorie`, id_marque) VALUES (:id, :description, :image, :idCat,:idMarque)");
         $req->bindParam(':id', $id);
@@ -177,23 +178,13 @@ function creerProduit($id, $description, $image, $idCat, $idMarque, $stock, $pri
         $req->bindParam(':idMarque', $idMarque);
         $req->execute();
 
-        $requete = "SELECT MAX(id) AS maxi FROM contenance";
-        $res = $monPdo->query($requete);
-        $laLigne = $res->fetch();
-        $maxi = $laLigne['maxi'];
-        $idContenance = $maxi + 1;
-
-        $req = $monPdo->prepare("INSERT INTO contenance (id, contenance, id_unite) VALUES (:idContenance, :contenance, :idUnite)");
-        $req->bindParam(':idContenance', $idContenance);
-        $req->bindParam(':contenance', $contenance);
-        $req->bindParam(':idUnite', $unite);
-        $req->execute();
-
-        $req = $monPdo->prepare("INSERT INTO posseder (id_contenance, id_produit, stock, prix) VALUES (:idContenance, :idProd, :stock, :prix)");
-        $req->bindParam(':idContenance', $idContenance);
-        $req->bindParam(':idProd', $id);
+        $stock = 0;
+        $req = $monPdo->prepare("INSERT INTO `posseder` VALUES (:id_contenance, :id_produit, :stock, :prix)");
+        $req->bindParam(':id_contenance', $idContenance);
+        $req->bindParam(':id_produit', $id);
         $req->bindParam(':stock', $stock);
         $req->bindParam(':prix', $prix);
+
         $req->execute();
     } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
@@ -203,7 +194,7 @@ function creerProduit($id, $description, $image, $idCat, $idMarque, $stock, $pri
 
 
 
-function editerProduit($idProduit, $description, $marque, $categorie, $prix, $stock, $unite, $contenance)
+function editerProduit($idProduit, $description, $marque, $categorie)
 {
     try {
         $monPdo = connexionPDOAdmin();
@@ -211,18 +202,6 @@ function editerProduit($idProduit, $description, $marque, $categorie, $prix, $st
         $req->bindParam(':description', $description);
         $req->bindParam(':id_marque', $marque);
         $req->bindParam(':idCategorie', $categorie);
-        $req->bindParam(':idProduit', $idProduit);
-        $req->execute();
-
-        $req = $monPdo->prepare("UPDATE contenance SET contenance=:contenance, id_unite=:id_unite WHERE id=(SELECT id_contenance FROM posseder WHERE id_produit=:idProduit)");
-        $req->bindParam(':contenance', $contenance);
-        $req->bindParam(':id_unite', $unite);
-        $req->bindParam(':idProduit', $idProduit);
-        $req->execute();
-
-        $req = $monPdo->prepare("UPDATE posseder SET stock=:stock, prix=:prix  WHERE id_produit=:idProduit");
-        $req->bindParam(':stock', $stock);
-        $req->bindParam(':prix', $prix);
         $req->bindParam(':idProduit', $idProduit);
         $req->execute();
     } catch (PDOException $e) {
@@ -320,6 +299,186 @@ function getCommandes()
         $req = $monPdo->prepare("SELECT co.id, u.nom, u.prenom, dateCommande, etat FROM commande co
         INNER JOIN utilisateur u
         ON co.idClient=u.id");
+        $req->execute();
+        $res = $req->fetchAll(PDO::FETCH_ASSOC);
+        return $res;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function getStockProd($id)
+{
+    try {
+        $monPdo = connexionPDOAdmin();
+        $req = $monPdo->prepare("SELECT id_contenance,contenance,u.libelle,id_produit, stock FROM posseder po INNER JOIN contenance co ON po.id_contenance=co.id INNER JOIN unite u ON co.id_unite=u.id WHERE id_produit=:id_produit;");
+        $req->bindParam(':id_produit', $id);
+        $req->execute();
+        $res = $req->fetchAll(PDO::FETCH_ASSOC);
+        return $res;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function updateStock($idProd, $idContenance, $stock)
+{
+    try {
+        $monPdo = connexionPDOAdmin();
+        $req = $monPdo->prepare("UPDATE posseder
+        SET stock =:stock
+        WHERE id_produit=:id_produit AND id_contenance=:id_contenance");
+        $req->bindParam(':id_produit', $idProd);
+        $req->bindParam(':id_contenance', $idContenance);
+        $req->bindParam(':stock', $stock);
+        $req->execute();
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function updatePrix($idProd, $idContenance, $prix)
+{
+    try {
+        $monPdo = connexionPDOAdmin();
+        $req = $monPdo->prepare("UPDATE posseder
+    SET prix =:prix
+    WHERE id_produit=:id_produit AND id_contenance=:id_contenance");
+        $req->bindParam(':id_produit', $idProd);
+        $req->bindParam(':id_contenance', $idContenance);
+        $req->bindParam(':prix', $prix);
+        $req->execute();
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function supprimerPosseder($idProd, $idContenance)
+{
+    try {
+        $monPdo = connexionPDOAdmin();
+        $req = $monPdo->prepare("DELETE FROM posseder WHERE id_contenance=:id_contenance AND id_produit=:id_produit");
+        $req->bindParam(':id_contenance', $idContenance);
+        $req->bindParam(':id_produit', $idProd);
+        $req->execute();
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function ajouterPosseder($id_contenance, $id_produit, $stock, $prix)
+{
+    try {
+        $monPdo = connexionPDOAdmin();
+        $req = $monPdo->prepare("INSERT INTO posseder  VALUES (:id_contenance, :id_produit, :stock, :prix)");
+        $req->bindParam(':id_contenance', $id_contenance);
+        $req->bindParam(':id_produit', $id_produit);
+        $req->bindParam(':stock', $stock);
+        $req->bindParam(':prix', $prix);
+        $req->execute();
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function existeProduit($idProd): bool
+{
+    try {
+        $monPdo = connexionPDO();
+        $req = $monPdo->prepare("select id from produit where id=:id_produit");
+        $req->bindParam(':id_produit', $idProd);
+        $req->execute();
+        $res = $req->fetchAll(PDO::FETCH_ASSOC);
+        if (empty($res)) {
+            $exist = false;
+        } else {
+            $exist = true;
+        }
+        return $exist;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function getContenances()
+{
+    try {
+        $monPdo = connexionPDOAdmin();
+        $req = $monPdo->prepare("SELECT contenance.id,contenance,libelle FROM `contenance`
+        INNER JOIN unite
+        on contenance.id_unite=unite.id;");
+        $req->execute();
+        $res = $req->fetchAll(PDO::FETCH_ASSOC);
+        return $res;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function creerContenance($contenance, $id_unite)
+{
+    try {
+        $monPdo = connexionPDOAdmin();
+
+        $req = 'select max(id) as maxi from contenance';
+        $res = $monPdo->query($req);
+        $laLigne = $res->fetch();
+        $maxi = $laLigne['maxi'] + 1;
+        $idContenance = $maxi;
+
+        $req = $monPdo->prepare("INSERT INTO contenance (id, contenance, id_unite) VALUES (:id, :contenance, :id_unite)");
+        $req->bindParam(':id', $idContenance);
+        $req->bindParam(':contenance', $contenance);
+        $req->bindParam(':id_unite', $id_unite);
+        $req->execute();
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function existeContenance($contenance, $id_unite)
+{
+    try {
+        $monPdo = connexionPDO();
+        $req = $monPdo->prepare("SELECT contenance, id_unite FROM contenance WHERE contenance=:contenance AND id_unite=:id_unite");
+        $req->bindParam(':contenance', $contenance);
+        $req->bindParam(':id_unite', $id_unite);
+        $req->execute();
+        $res = $req->fetch(PDO::FETCH_ASSOC);
+        if (empty($res)) {
+            $exist = false;
+        } else {
+            $exist = true;
+        }
+        return $exist;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+
+function getContenancesProd($IdProd)
+{
+    try {
+        $monPdo = connexionPDOAdmin();
+
+        $req = $monPdo->prepare("SELECT id_contenance, libelle, contenance, stock, prix FROM posseder po
+        INNER JOIN contenance co
+        ON po.id_contenance=co.id
+        INNER JOIN unite u 
+        ON co.id_unite=u.id
+        WHERE id_produit=:id_produit");
+        $req->bindParam(':id_produit', $IdProd);
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
         return $res;

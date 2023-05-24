@@ -225,7 +225,7 @@ function getLesProduits()
 		$monPdo = connexionPDO();
 		$req = 'SELECT `id`,`description`,`image`,`idCategorie`, MIN(prix) AS prix
 		FROM produit pr
-		INNER JOIN posseder po
+		LEFT JOIN posseder po
 		ON pr.id=po.id_produit
 		GROUP BY id';
 		$res = $monPdo->query($req);

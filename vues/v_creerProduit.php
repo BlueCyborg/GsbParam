@@ -1,16 +1,15 @@
 <form action="" method="POST">
     <label for="id">Nom du produit : </label>
-    <input type="text" name="id"><br>
+    <input type="text" name="id" required><br>
 
     <label for="description">Description : </label>
-    <input type="text" name="description"><br>
+    <input type="text" name="description" required><br>
 
     <label for="image">Image : </label>
-    <input type="text" name="image"><br>
+    <input type="text" name="image" required><br>
 
     <label for="marque">Marque : </label>
     <select name="marque" id="marque">
-        <option hidden value="">Choisir une marque</option>
         <?php
         foreach ($marques as $uneMarque) {
         ?>
@@ -22,7 +21,6 @@
 
     <label for="categorie">Catégorie du produit : </label>
     <select name="categorie" id="categorie">
-        <option hidden value="">Choisir une catégorie</option>
         <?php
         foreach ($categories as $uneCategorie) {
         ?>
@@ -31,27 +29,19 @@
         }
         ?>
     </select><br>
-
-    <label for="prix">Prix : </label>
-    <input type="number" value="0" name="prix"><br>
-
-    <label for="stock">Stock : </label>
-    <input type="number" value="0" name="stock"><br>
-
-    <label for="unite">Unité : </label>
-    <select name="unite" id="unite">
-        <option hidden value="">Choisir une unité</option>
+    <p>Choisir une contenance : </p>
+    <select name="lesContenances" id="lesContenances">
         <?php
-        foreach ($unites as $uneUnite) {
+        foreach ($contenances as $uneContenance) {
         ?>
-            <option value="<?php echo $uneUnite['id'] ?>"><?php echo $uneUnite['libelle'] ?></option>
+            <option value="<?= $uneContenance['id'] ?>"><?= $uneContenance['contenance'] ?> <?= $uneContenance['libelle'] ?></option>
         <?php
         }
         ?>
     </select><br>
+    <a href="index.php?uc=administrer&action=creerContenance">créer une contenance</a><br>
 
-    <label for="contenance">Contenance : </label>
-    <input type="number" value="0" name="contenance"><br>
-
+    <label for="prix">prix : </label>
+    <input type="text" name="prix" required><br>
     <input type="submit" name="submit" value="Créer">
 </form>
