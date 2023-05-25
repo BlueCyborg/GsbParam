@@ -18,23 +18,29 @@
 					<a class="nav-link" href="index.php?uc=administrer&action=creerProduit">Creer un produit</a>
 				</li>
 			<?php } else { ?>
-				<li class="nav-item dropdown">
-					<a class="nav-link" href="index.php?uc=voirProduits&action=voirCategories" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-						Nos produits par catégorie
-					</a>
-					<ul class="dropdown-menu">
-						<?php $categories = getLesCategories();
-						foreach ($categories as $uneCategorie) {
-						?> <li><a class="dropdown-item" href="index.php?uc=voirProduits&categorie=<?= htmlspecialchars($uneCategorie['id']) ?>&action=voirProduits"><?= htmlspecialchars($uneCategorie['libelle']); ?></a></li>
-						<?php } ?>
-					</ul>
-				</li>
+
 				<li class="nav-item">
 					<a class="nav-link" href="index.php?uc=voirProduits&action=nosProduits">Nos produits</a>
 				</li>
+
+				<div class="btn-group">
+					<li class="nav-item dropdown">
+						<a class="nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Nos produits par catégorie
+						</a>
+						<ul class="dropdown-menu">
+							<?php $categories = getLesCategories();
+							foreach ($categories as $uneCategorie) {
+							?> <li><a class="dropdown-item" href="index.php?uc=voirProduits&categorie=<?= htmlspecialchars($uneCategorie['id']) ?>&action=voirProduits"><?= htmlspecialchars($uneCategorie['libelle']); ?></a></li>
+							<?php } ?>
+						</ul>
+					</li>
+				</div>
+
 				<li class="nav-item">
 					<a class="nav-link" href="index.php?uc=gererPanier&action=voirPanier">Voir son panier</a>
 				</li>
+
 			<?php } ?>
 		</ul>
 		<form class="form-inline my-2 my-lg-0">

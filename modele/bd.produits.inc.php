@@ -24,8 +24,7 @@ function getLesCategories()
 		$res = $monPdo->query($req);
 		$lesLignes = $res->fetchAll(PDO::FETCH_ASSOC);
 		return $lesLignes;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -45,8 +44,7 @@ function getLesInfosCategorie($idCategorie)
 		$req->execute();
 		$laLigne = $req->fetch(PDO::FETCH_ASSOC);
 		return $laLigne;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -63,13 +61,27 @@ function getLesProduitsDeCategorie($idCategorie)
 {
 	try {
 		$monPdo = connexionPDO();
-		$req = $monPdo->prepare("select id, description, image, idCategorie from produit where idCategorie = :id");
+		$req = $monPdo->prepare('SELECT
+		p.id,
+		p.nom,
+		p.image,
+		p.id_categorie,
+		o.stock,
+		o.prix,
+		m.libelle AS marque,
+		CASE WHEN o.stock > 0 THEN true ELSE false END AS en_stock
+	FROM
+		produit p
+	INNER JOIN posseder o ON
+		p.id = o.id_produit
+	INNER JOIN marque m ON
+		p.id_marque = m.id
+	WHERE p.id_categorie = :id;');
 		$req->bindParam(':id', $idCategorie);
 		$req->execute();
 		$lesLignes = $req->fetchAll(PDO::FETCH_ASSOC);
 		return $lesLignes;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -80,24 +92,36 @@ function getLesProduitsDeCategorie($idCategorie)
  * @param array $desIdProduit tableau d'idProduits
  * @return array $lesProduits un tableau associatif contenant les infos des produits dont les id ont été passé en paramètre
  */
-function getLesProduitsDuTableau($desIdProduit)
+function getLesProduitsDuTableau($desProduits)
 {
 	try {
 		$monPdo = connexionPDO();
-		$nbProduits = count($desIdProduit);
+		$nbProduits = count($desProduits);
 		$lesProduits = array();
 		if ($nbProduits != 0) {
-			foreach ($desIdProduit as $unIdProduit) {
-				$req = $monPdo->prepare("select id, description, prix, image, idCategorie from produit where id = :id");
-				$req->bindParam(':id', $unIdProduit);
+			foreach ($desProduits as $unProduit) {
+				$req = $monPdo->prepare("SELECT 
+				o.id_produit AS 'idProduit',
+				o.id_contenance AS 'idContenance',
+				p.`nom`,
+				p.`image`,
+				o.prix,
+				o.stock,
+				m.libelle AS 'marque'
+			FROM `produit` p
+				INNER JOIN posseder o ON p.id = o.id_produit
+				INNER JOIN marque m ON p.id_marque = m.id
+			WHERE
+				o.id_produit = :idP AND o.id_contenance = :idC");
+				$req->bindParam(':idP', $unProduit['idProduit']);
+				$req->bindParam(':idC', $unProduit['idContenance']);
 				$req->execute();
 				$unProduit = $req->fetch(PDO::FETCH_ASSOC);
 				$lesProduits[] = $unProduit;
 			}
 		}
 		return $lesProduits;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -116,7 +140,7 @@ function getLesProduitsDuTableau($desIdProduit)
  * @param array $lesIdProduit tableau associatif contenant les id des produits commandés
  
  */
-function creerCommande($mail, $lesIdProduit, $lesQte)
+function creerCommande($mail, $lesProduits)
 {
 	try {
 		$idClient = infoUtilisateur($mail);
@@ -135,15 +159,15 @@ function creerCommande($mail, $lesIdProduit, $lesQte)
 		$req->bindParam(':date', $date);
 		$req->execute();
 		// insertion produits commandés
-		foreach ($lesIdProduit as $unIdProduit) {
-			$req = $monPdo->prepare("INSERT INTO `contenir`(`idCommande`, `idProduit`, `quantite`) VALUES (:id, :unIdProduit, :laQte)");
+		foreach ($lesProduits as $unProduit) {
+			$req = $monPdo->prepare("INSERT INTO `contenir`(`idCommande`, `idProduit`, `id_contenance`, `quantite`) VALUES (:id, :unIdProduit, :unIdContenance, :laQte)");
 			$req->bindParam(':id', $idCommande);
-			$req->bindParam(':unIdProduit', $unIdProduit);
-			$req->bindParam(':laQte', $lesQte[$unIdProduit]);
+			$req->bindParam(':unIdProduit', $unProduit['idProduit']);
+			$req->bindParam(':unIdContenance', $unProduit['idContenance']);
+			$req->bindParam(':laQte', $unProduit['quantite']);
 			$req->execute();
 		}
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -165,8 +189,7 @@ function getLesCommandesDuMois($mois, $an)
 		$req->execute();
 		$lesCommandes = $req->fetchAll(PDO::FETCH_ASSOC);
 		return $lesCommandes;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -180,12 +203,26 @@ function getLesProduits()
 {
 	try {
 		$monPdo = connexionPDO();
-		$req = 'select `id`,`description`,`image`,`idCategorie` from `produit` ';
+		$req = 'SELECT
+		p.id,
+		p.nom,
+		p.image,
+		p.id_categorie,
+		o.stock,
+		o.prix,
+		m.libelle AS marque,
+		CASE WHEN o.stock > 0 THEN true ELSE false END AS en_stock
+	FROM
+		produit p
+	INNER JOIN posseder o ON
+		p.id = o.id_produit
+	INNER JOIN marque m ON
+		p.id_marque = m.id;
+	';
 		$res = $monPdo->query($req);
 		$lesProduits = $res->fetchAll(PDO::FETCH_ASSOC);
 		return $lesProduits;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}
@@ -200,13 +237,114 @@ function getInfoProduit($idProduit)
 {
 	try {
 		$monPdo = connexionPDO();
-		$req = $monPdo->prepare("select id, description, prix, image, idCategorie from produit where id=:id");
+		$req = $monPdo->prepare("SELECT
+		p.`id`,
+		p.`nom`,
+		p.`image`,
+		p.`description`,
+		m.libelle AS 'marque',
+		ca.libelle AS 'categorie',
+		o.prix,
+		o.stock,
+		u.libelle AS 'unite',
+		c.contenance,
+		o.`id_contenance`
+	FROM
+		`produit` p
+	INNER JOIN posseder o ON
+		p.id = o.id_produit
+	INNER JOIN marque m ON
+		p.id_marque = m.id
+	INNER JOIN contenance c ON
+		o.id_contenance = c.id
+	INNER JOIN unite u ON
+		c.id_unite = u.id
+	INNER JOIN categorie ca ON
+		p.id_categorie = ca.id
+	WHERE
+		p.id = :id");
+
 		$req->bindParam(':id', $idProduit);
 		$req->execute();
 		$infoProduit = $req->fetchAll(PDO::FETCH_ASSOC);
 		return $infoProduit;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 	}
+}
+
+function getLesMarques(): array
+{
+	try {
+		$monPdo = connexionPDO();
+		$req = $monPdo->query("SELECT `id`, `libelle` FROM `marque`;");
+		$res = $req->fetchAll(PDO::FETCH_ASSOC);
+		return $res;
+	} catch (PDOException $e) {
+		print "Erreur !: " . $e->getMessage();
+		die();
+	}
+}
+
+function getUneMarques($id)
+{
+	try {
+		$monPdo = connexionPDO();
+		$req = $monPdo->prepare("SELECT `id`, `libelle` FROM `marque` WHERE id = :id;");
+		$req->bindParam(':id', $id, PDO::PARAM_INT);
+		$req->execute();
+		$res = $req->fetchAll(PDO::FETCH_ASSOC);
+	} catch (PDOException $e) {
+		print "Erreur !: " . $e->getMessage();
+		die();
+	}
+}
+
+function getLesProduitsFiltre(float $prixMin, float $prixMax, int $idMarque): array
+{
+	try {
+		$monPdo = connexionPDO();
+		$req = $monPdo->prepare("SELECT
+            p.id,
+		p.nom,
+		p.image,
+		p.id_categorie,
+		o.stock,
+		o.prix,
+		m.libelle AS marque,
+		CASE WHEN o.stock > 0 THEN true ELSE false END AS en_stock
+        FROM
+            `produit` p
+        INNER JOIN posseder o ON
+            p.id = o.id_produit
+        INNER JOIN marque m ON
+            p.id_marque = m.id
+        WHERE
+            o.prix >= :prixMin AND o.prix <= :prixMax AND m.id = :idMarque");
+
+		$req->bindParam(':prixMin', $prixMin, PDO::PARAM_STR);
+		$req->bindParam(':prixMax', $prixMax, PDO::PARAM_STR);
+		$req->bindParam(':idMarque', $idMarque, PDO::PARAM_INT);
+
+		$req->execute();
+
+		$res = $req->fetchAll(PDO::FETCH_ASSOC);
+		return $res;
+	} catch (PDOException $e) {
+		print "Erreur !: " . $e->getMessage();
+		die();
+	}
+}
+
+function getQuantiteProduit($idProduit, $idContenance)
+{
+	if (isset($_SESSION['produits']) && is_array($_SESSION['produits'])) {
+		foreach ($_SESSION['produits'] as $produit) {
+			if ($produit['idProduit'] === $idProduit && $produit['idContenance'] === $idContenance) {
+				return $produit['quantite'];
+			}
+		}
+	}
+
+	return 0; // Si le produit n'est pas trouvé, on retourne 0 par défaut
 }

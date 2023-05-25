@@ -14,7 +14,7 @@ if (isset($_SESSION['administrateur'])) {
                 $categorie = $_REQUEST['categorie'];
                 for ($i = 0; $i < count($lesCategories); $i++) {
                     if ($lesCategories[$i]['id'] == $categorie) {
-                        echo "Produits de la catégorie " . $lesCategories[$i]['libelle'];
+                        echo "Produits de la catégorie" . $lesCategories[$i]['libelle'];
                     }
                 }
                 $lesProduits = getLesProduitsDeCategorie($categorie);
@@ -31,8 +31,7 @@ if (isset($_SESSION['administrateur'])) {
                 if (isset($_POST['submit'])) {
                     creerProduit($_POST['id'], $_POST['description'], $_POST['prix'], $_POST['image'], $_POST['idCat']);
                     echo 'Le Produit à bien été crée !';
-                }
-                else {
+                } else {
                     include("vues/v_creerProduit.php");
                 }
                 break;
@@ -44,25 +43,20 @@ if (isset($_SESSION['administrateur'])) {
                     if ($_POST['select_modifier'] == 'id') {
                         modifierIdProduit($_REQUEST['produit'], $_POST['value_modifier']);
                         echo "L'ID à été modifié !";
-                    }
-                    elseif ($_POST['select_modifier'] == 'description') {
+                    } elseif ($_POST['select_modifier'] == 'description') {
                         modifierDescriptionProduit($_REQUEST['produit'], $_POST['value_modifier']);
                         echo "La description à été modifié !";
-                    }
-                    elseif ($_POST['select_modifier'] == 'prix') {
+                    } elseif ($_POST['select_modifier'] == 'prix') {
                         modifierPrixProduit($_REQUEST['produit'], $_POST['value_modifier']);
                         echo "Le prix à été modifié !";
-                    }
-                    elseif ($_POST['select_modifier'] == 'image') {
+                    } elseif ($_POST['select_modifier'] == 'image') {
                         modifierImageProduit($_REQUEST['produit'], $_POST['value_modifier']);
                         echo "L'image à été modifié !";
-                    }
-                    elseif ($_POST['select_modifier'] == 'idCat') {
+                    } elseif ($_POST['select_modifier'] == 'idCat') {
                         modifierIDCatProduit($_REQUEST['produit'], $_POST['value_modifier']);
                         echo "L'ID Categorie à été modifié !";
                     }
-                }
-                else {
+                } else {
                     $infoProd = getInfoProduit($_REQUEST['produit']);
                     include("vues/v_modifierProduit.php");
                 }
@@ -82,8 +76,7 @@ if (isset($_SESSION['administrateur'])) {
                 break;
             }
     }
-}
-else {
+} else {
     switch ($action) {
         case 'connexion': {
                 //Si l'administrateur à déjà rentré les valeurs
@@ -94,30 +87,26 @@ else {
                     if (count($msgErreurs) != 0) {
                         //S'il y a des erreurs alors on les affiches
                         include("vues/v_erreurs.php");
-                    }
-                    else {
+                    } else {
                         $connexion = connexionCompteAdministrateur($user, $password);
                         if (empty($connexion)) {
                             $msgErreurs[] = "Vous n'êtes pas inscrit.";
                             include("vues/v_erreurs.php");
-                        }
-                        else {
+                        } else {
                             $message = "Vous êtes désormais connecté";
                             include_once("vues/v_message.php");
                             $_SESSION['administrateur'] = $user;
                         }
                     }
-                }
-                elseif (isset($_SESSION['administrateur']) and !empty($_SESSION['administrateur'])) {
+                } elseif (isset($_SESSION['administrateur']) and !empty($_SESSION['administrateur'])) {
                     $message = "Vous est déjà authentifié";
                     include("vues/v_message.php");
-                }
-                else {
+                } else {
                     include("vues/v_connexionAdministrateur.php");
                 }
                 break;
             }
-        //Par défault l'on redirige l'utilisateur vers la page d'accueil pour cacher la page administrateur
+            //Par défault l'on redirige l'utilisateur vers la page d'accueil pour cacher la page administrateur
         default: {
                 header('Location:index.php?uc=accueil');
                 exit();

@@ -11,20 +11,34 @@ switch ($action) {
 		}
 	case 'voirProduits': {
 			$lesCategories = getLesCategories();
-			include("vues/v_categories.php");
 			$categorie = $_REQUEST['categorie'];
 			$lesProduits = getLesProduitsDeCategorie($categorie);
+			include("vues/v_categories.php");
 			include("vues/v_produitsDeCategorie.php");
 			break;
 		}
 	case 'nosProduits': {
-			$lesProduits = getLesProduits();
+			if (isset($_POST['idMarque'])) {
+				$lesProduits = getLesProduitsFiltre($_POST['prixMin'], $_POST['prixMax'], $_POST['idMarque']);
+			} else {
+				$lesProduits = getLesProduits();
+			}
+			$lesMarques = getLesMarques();
+			include("vues/v_filtre_produits.php");
 			include("vues/v_produits.php");
 			break;
 		}
+	case 'infoProduit': {
+			$idProduit = $_POST['idProduit'];
+			$infoProduit = getInfoProduit($idProduit);
+			include("vues/v_produit.php");
+			break;
+		}
 	case 'ajouterAuPanier': {
-			$idProduit = $_REQUEST['produit'];
-			$ok = ajouterAuPanier($idProduit);
+			$idProduit = $_GET['produit'];
+			$idContenance = $_POST['contenance']; // Ajout de la récupération de l'identifiant de contenance
+			$quantite = $_POST['quantite'];
+			$ok = ajouterAuPanier($idProduit, $idContenance, $quantite);
 			if (!$ok) {
 				$message = "Cet article est déjà dans le panier !!";
 				include("vues/v_message.php");

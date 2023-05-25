@@ -12,13 +12,13 @@
             <?php
             $total = 0;
             foreach ($_SESSION['produits'] as $unProduit) {
-               $info = getInfoProduit($unProduit);
-               $quantite = $_REQUEST['qte'][$info[0]['id']];
+               $info = getInfoProduit($unProduit['idProduit']);
+               $quantite = getQuantiteProduit($unProduit['idProduit'], $unProduit['idContenance']);
                $total += $quantite * $info[0]['prix'];
             ?>
-               <img src="<?= $info[0]['image'] ?>" alt="<?= $info[0]['description'] ?>" width="100">
+               <img src="<?= $info[0]['image'] ?>" alt="<?= $info[0]['nom'] ?>" width="100">
                <div style="flex-direction: columns;">
-                  <p>Nom : <?= $info[0]['description'] ?></p>
+                  <p>Nom : <?= $info[0]['nom'] ?></p>
                   <p>Qte:
                      <?= $quantite ?>
                   </p>

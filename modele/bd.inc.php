@@ -18,10 +18,10 @@
  */
 function connexionPDO()
 {
-    $login = 'dev';
-    $mdp = 'dev';
+    $login = 'root';
+    $mdp = '';
     $bd = 'gsbParam';
-    $serveur = 'localhost:3307';
+    $serveur = 'localhost';
 
     try {
         $conn = new PDO("mysql:host=$serveur;dbname=$bd", $login, $mdp, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''));
@@ -44,7 +44,20 @@ function infoUtilisateur($mail): array
     try {
         $monPdo = connexionPDO();
 
-        $req = $monPdo->prepare("select id, nom, prenom, telephone, adresse, cp, ville from utilisateur where mail = :mail");
+        $req = $monPdo->prepare("SELECT
+        u.`id`,
+        u.`nom`,
+        u.`prenom`,
+        u.`telephone`,
+        u.`adresse`,
+        u.`cp`,
+        u.`ville`
+    FROM
+        `utilisateur` u
+    INNER JOIN login l ON
+        u.id = l.id
+    WHERE
+        l.mail = :mail");
         $req->bindParam(':mail', $mail);
         $req->execute();
         return $req->fetch(PDO::FETCH_ASSOC);

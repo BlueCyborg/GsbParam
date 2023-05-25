@@ -40,17 +40,35 @@ function supprimerPanier()
  * @param string $idProduit identifiant de produit
  * @return boolean $ok vrai si le produit n'était pas dans la variable, faux sinon 
  */
-function ajouterAuPanier($idProduit)
+function ajouterAuPanier($idProduit, $idContenance, $quantite)
 {
 	$ok = true;
-	if (in_array($idProduit, $_SESSION['produits'])) {
-		$ok = false;
+	$panier = isset($_SESSION['produits']) ? $_SESSION['produits'] : array();
+
+	// Vérifie si le produit avec la même contenance existe déjà dans le panier
+	foreach ($panier as &$produit) {
+		if ($produit['idProduit'] === $idProduit && $produit['idContenance'] === $idContenance) {
+			$ok = false;
+			// Ajoute la quantité au produit existant dans le panier
+			$produit['quantite'] += $quantite;
+			break;
+		}
 	}
-	else {
-		$_SESSION['produits'][] = $idProduit; // l'indice n'est pas précisé : il sera automatiquement celui qui suit le dernier occupé
+
+	if ($ok) {
+		// Ajoute le produit avec sa contenance au panier
+		$nouveauProduit = array(
+			'idProduit' => $idProduit,
+			'idContenance' => $idContenance,
+			'quantite' => $quantite
+		);
+		$panier[] = $nouveauProduit;
 	}
+
+	$_SESSION['produits'] = $panier;
 	return $ok;
 }
+
 /**
  * Retourne les produits du panier
  *
@@ -157,8 +175,7 @@ function getErreursSaisieCommande($mail, $nom, $telephone, $adresse, $cp, $ville
 	$lesErreurs = array();
 	if ($mail == "") {
 		$lesErreurs[] = "Il faut saisir le champ mail";
-	}
-	else {
+	} else {
 		if (!estUnMail($mail)) {
 			$lesErreurs[] = "erreur de mail";
 		}
@@ -174,8 +191,7 @@ function getErreursSaisieCommande($mail, $nom, $telephone, $adresse, $cp, $ville
 	}
 	if ($cp == "") {
 		$lesErreurs[] = "Il faut saisir le champ Code postal";
-	}
-	else {
+	} else {
 		if (!estUnCp($cp)) {
 			$lesErreurs[] = "erreur de code postal";
 		}
@@ -222,16 +238,14 @@ function getErreursSaisieInscription($nom, $prenom, $telephone, $adresse, $cp, $
 	}
 	if ($cp == "") {
 		$lesErreurs[] = "Il faut saisir le champ Code postal";
-	}
-	else {
+	} else {
 		if (!estUnCp($cp)) {
 			$lesErreurs[] = "erreur de code postal";
 		}
 	}
 	if ($mail == "") {
 		$lesErreurs[] = "Il faut saisir le champ mail";
-	}
-	else {
+	} else {
 		if (!estUnMail($mail)) {
 			$lesErreurs[] = "erreur de mail";
 		}
@@ -241,8 +255,7 @@ function getErreursSaisieInscription($nom, $prenom, $telephone, $adresse, $cp, $
 	}
 	if ($motdepass2 == "") {
 		$lesErreurs[] = "Il faut saisir le champ mot de passe";
-	}
-	else {
+	} else {
 		if ($motdepass2 != $motdepasse) {
 			$lesErreurs[] = "Les mots de passe ne sont pas identiques";
 		}
@@ -265,8 +278,7 @@ function getErreursSaisieConnexion($mail, $pass)
 	$lesErreurs = array();
 	if ($mail == "") {
 		$lesErreurs[] = "Il faut saisir le champ mail";
-	}
-	else {
+	} else {
 		if (!estUnMail($mail)) {
 			$lesErreurs[] = "Erreur: votre saisie ne correspond pas à un mail";
 		}
@@ -312,13 +324,11 @@ function existeUtilisateur($mail): bool
 		$res = $req->fetchAll(PDO::FETCH_ASSOC);
 		if (empty($res)) {
 			$exist = false;
-		}
-		else {
+		} else {
 			$exist = true;
 		}
 		return $exist;
-	}
-	catch (PDOException $e) {
+	} catch (PDOException $e) {
 		print "Erreur !: " . $e->getMessage();
 		die();
 	}

@@ -4,8 +4,8 @@ switch ($action) {
 	case 'voirPanier': {
 			$n = nbProduitsDuPanier();
 			if ($n > 0) {
-				$desIdProduit = getLesIdProduitsDuPanier();
-				$lesProduitsDuPanier = getLesProduitsDuTableau($desIdProduit);
+				$lesProduitsDuPanier = getLesIdProduitsDuPanier();
+				$lesProduits = getLesProduitsDuTableau($lesProduitsDuPanier);
 				include("vues/v_panier.php");
 			} else {
 				$message = "panier vide !!";
@@ -14,15 +14,20 @@ switch ($action) {
 			break;
 		}
 	case 'supprimerUnProduit': {
-			$idProduit = $_REQUEST['produit'];
-			retirerDuPanier($idProduit);
-			$desIdProduit = getLesIdProduitsDuPanier();
-			$lesProduitsDuPanier = getLesProduitsDuTableau($desIdProduit);
-			include("vues/v_panier.php");
+			if (nbProduitsDuPanier() > 0) {
+				$idProduit = $_REQUEST['produit'];
+				retirerDuPanier($idProduit);
+				$desIdProduit = getLesIdProduitsDuPanier();
+				$lesProduitsDuPanier = getLesProduitsDuTableau($desIdProduit);
+				include("vues/v_panier.php");
+				header('Location:index.php?uc=gererPanier&action=voirPanier');
+			}else {
+				header('Location:index.php?uc=gererPanier&action=voirPanier');
+			}
+			
 			break;
 		}
 	case 'passerCommande': {
-			$_SESSION['qte'] = $_REQUEST['qte'];
 			if (isset($_SESSION['user'])) {
 				$n = nbProduitsDuPanier();
 				if ($n > 0) {
@@ -62,10 +67,9 @@ switch ($action) {
 				include("vues/v_erreurs.php");
 				include("vues/v_commande.php");
 			} else {
-				$lesIdProduit = getLesIdProduitsDuPanier();
-				$lesQte = getLaQte();
-				if (isset($lesIdProduit) && isset($lesQte) == true) {
-					creerCommande($mail, $lesIdProduit, $lesQte);
+				$lesProduits = getLesIdProduitsDuPanier();
+				if (isset($lesProduits) == true) {
+					creerCommande($mail, $lesProduits);
 					$message = "Commande enregistrée";
 					supprimerPanier();
 					include("vues/v_message.php");

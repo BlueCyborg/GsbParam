@@ -72,7 +72,7 @@ input[type="submit"] {
 }
 
 #produits {
-	padding: 0 150px;
+	padding: 0 200px;
 }
 
 #contenu {}
@@ -98,13 +98,13 @@ input[type="submit"] {
 	list-style-type: none;
 	list-style-image: none;
 	/*float:left; */
-	margin-right: 1px;
-	width: 100px;
+	margin-right: 10px;
+	width: 12%;
 	text-align: center;
 	background-color: #ffffff;
 }
 
-#categories option{
+#categories option {
 	border: 1px solid rgb(13, 170, 13);
 }
 
@@ -134,13 +134,13 @@ input[type="submit"] {
 }
 
 div.card {
+	text-align: center;
 	position: relative;
-	width: 180px;
-	height: 250px;
+	background-color: white;
+	width: 35%;
 	float: left;
 	padding: 10px;
 	margin: 10px;
-	background-color: var(--fondC);
 	box-shadow: 1px 1px 4px #bbb;
 }
 
@@ -150,7 +150,7 @@ div.photoCard>img {
 
 }
 
-div.descrCard {
+div.nomCard {
 	top: 0px;
 	font: .8em "Trebuchet MS", Arial, sans-serif;
 }
@@ -188,4 +188,15 @@ div.imgCard {
 
 .nav-link:hover:after {
 	width: 100%;
+}
+
+.horizontal-container {
+	display: flex;
+	align-items: center;
+	/* Aligner les éléments verticalement au centre */
+}
+
+.btn {
+	margin-left: auto;
+	/* Déplacer le bouton vers la droite */
 }

@@ -1,43 +1,36 @@
-<div>
+<div style="text-align: center;">
 	<img src="images/panier.gif" alt="Panier" title="panier" />
 </div>
 
 <form method="POST" action="index.php?uc=gererPanier&action=passerCommande" style="display: flex; row-gap: 2rem; align-items: center; flex-direction: column;">
 	<div id="produits">
 		<?php
-		foreach ($lesProduitsDuPanier as $unProduit) {
+		foreach ($lesProduits as $unProduit) {
 			// récupération des données d'un produit
-			$id = htmlspecialchars($unProduit['id']);
-			$description = htmlspecialchars($unProduit['description']);
+			$idProduit = htmlspecialchars($unProduit['idProduit']);
+			$idContenance = htmlspecialchars($unProduit['idContenance']);
+			$marque = htmlspecialchars($unProduit['marque']);
+			$nom = htmlspecialchars($unProduit['nom']);
 			$image = htmlspecialchars($unProduit['image']);
 			$prix = htmlspecialchars($unProduit['prix']);
+			$stock = htmlspecialchars($unProduit['stock']);
+			$quantite = getQuantiteProduit($idProduit, $idContenance);
 			// affichage
 		?>
-
-			<div class="card">
-
-				<div class="photoCard">
-					<img src="<?php echo $image ?>" alt="image descriptive" />
-				</div>
-				<div class="descrCard"><?php echo	$description; ?> </div>
-				<div class="prixCard"><?php echo $prix . "€" ?></div>
+			<div class="card" style="width: auto;">
+				<div><?= $marque ?></div>
+				<div class="photoCard"><img src="<?= $image ?>" alt="image" /></div>
+				<div class="nomCard"><?= $nom ?></div>
+				<br>
+				<div>Prix unitaire : <?= $prix . "€" ?></div>
 				<div class="imgCard">
-					<a href="index.php?uc=gererPanier&produit=<?php echo $id ?>&action=supprimerUnProduit" onclick="return confirm('Voulez-vous vraiment retirer cet article ?');">
+					<a href="index.php?uc=gererPanier&produit=<?= $idProduit ?>&action=supprimerUnProduit" onclick="return confirm('Voulez-vous vraiment retirer cet article ?');">
 						<img src="images/retirerpanier.png" TITLE="Retirer du panier" alt="retirer du panier">
 					</a>
 				</div>
 				<br>
-				<br>
-				<br>
-				<br>
 				<p>Quantité
-					<?php
-					//Permet de restituer la quantitée du produit précédement choisie par l'utilisateur
-					$value = 1;
-					if (isset($_SESSION['qte'])) {
-						$value = $_SESSION['qte'][$id];
-					} ?>
-					<input type="number" name="qte[<?= $id ?>]" min="1" max="100" value="<?= $value ?>" required />
+					<input type="number" name="quantite" min="1" max="<?= $stock ?>" value="<?= $quantite ?>" required />
 				</p>
 			</div>
 		<?php
