@@ -1,5 +1,5 @@
 <form action="" method="post">
-    <p>Associer des produits</p><br>
+    <h1>Associer des produits</h1><br>
     <label for="produit1">Produit :</label>
     <select name="produit1" id="produit1" required>
         <option hidden value="">Choisir un produit</option>

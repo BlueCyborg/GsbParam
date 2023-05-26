@@ -14,7 +14,8 @@ function connexionPDOAdmin()
         $conn = new PDO("mysql:host=$serveur;dbname=$bd", $login, $mdp, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''));
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $conn;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur de connexion PDO ";
         die();
     }
@@ -38,7 +39,8 @@ function modifierIdProduit($idProduit, $newID)
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
         return $res;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
@@ -61,7 +63,8 @@ function modifierDescriptionProduit($idProduit, $newDescription)
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
         return $res;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
@@ -84,7 +87,8 @@ function modifierPrixProduit($idProduit, $newPrix)
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
         return $res;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
@@ -107,7 +111,8 @@ function modifierImageProduit($idProduit, $newImage)
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
         return $res;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
@@ -130,7 +135,8 @@ function modifierIDCatProduit($idProduit, $newIDCat)
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
         return $res;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
@@ -150,7 +156,8 @@ function supprimerProduit($idProduit)
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
         return $res;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
@@ -186,14 +193,23 @@ function creerProduit($id, $description, $image, $idCat, $idMarque, $idContenanc
         $req->bindParam(':prix', $prix);
 
         $req->execute();
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
 
-
+/**
+ * Fonction permettant d"éditer un produit.
+ *
+ * @param string $idProduit
+ * @param string $description
+ * @param string $marque
+ * @param string $categorie
+ * @return void
+ */
 function editerProduit($idProduit, $description, $marque, $categorie)
 {
     try {
@@ -204,12 +220,20 @@ function editerProduit($idProduit, $description, $marque, $categorie)
         $req->bindParam(':idCategorie', $categorie);
         $req->bindParam(':idProduit', $idProduit);
         $req->execute();
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+/**
+ * Fonction permettant d'associer deux produit entre eux.
+ *
+ * @param int $produit1
+ * @param int $produit2
+ * @return void
+ */
 function associerProduit($produit1, $produit2)
 {
     try {
@@ -218,13 +242,20 @@ function associerProduit($produit1, $produit2)
         $req->bindParam(':produit1', $produit1);
         $req->bindParam(':produit2', $produit2);
         $req->execute();
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
-
+/**
+ * Permet de vérifier si il existe une assciation entre ces deux produits.
+ *
+ * @param int $produit1
+ * @param int $produit2
+ * @return void
+ */
 function existeAssociation($produit1, $produit2)
 {
     try {
@@ -236,18 +267,24 @@ function existeAssociation($produit1, $produit2)
 
         foreach ($res as $unRes) {
             if (($unRes['id'] == $produit1 || $unRes['id'] == $produit2) &&
-                ($unRes['id_produit'] == $produit1 || $unRes['id_produit'] == $produit2)
+            ($unRes['id_produit'] == $produit1 || $unRes['id_produit'] == $produit2)
             ) {
                 $resultat = true;
             }
         }
         return $resultat;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+/**
+ * Fonction permettant de trouver tous les associations en base.
+ *
+ * @return $lesLignes
+ */
 function getAssociations()
 {
     try {
@@ -256,12 +293,22 @@ function getAssociations()
         $res = $monPdo->query($req);
         $lesLignes = $res->fetchAll(PDO::FETCH_ASSOC);
         return $lesLignes;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+/**
+ * Fonction permettant de modifier une association
+ *
+ * @param int $produit1
+ * @param int $produit2
+ * @param int $produit1Remp
+ * @param int $produit2Remp
+ * @return void
+ */
 function modificationAssociation($produit1, $produit2, $produit1Remp, $produit2Remp)
 {
     try {
@@ -272,12 +319,20 @@ function modificationAssociation($produit1, $produit2, $produit1Remp, $produit2R
         $req->bindParam(':produit1Remp', $produit1Remp);
         $req->bindParam(':produit2Remp', $produit2Remp);
         $req->execute();
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+/**
+ * Fonction permettant de supprimer une association
+ *
+ * @param int $produit1
+ * @param int $produit2
+ * @return void
+ */
 function supprimerAssociation($produit1, $produit2)
 {
     try {
@@ -286,12 +341,18 @@ function supprimerAssociation($produit1, $produit2)
         $req->bindParam(':produit1', $produit1);
         $req->bindParam(':produit2', $produit2);
         $req->execute();
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+/**
+ * Fonction permettant de récuperer le nom et le prènom d'un utilisateur qui a commané.
+ *
+ * @return void
+ */
 function getCommandes()
 {
     try {
@@ -302,12 +363,14 @@ function getCommandes()
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
         return $res;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+/* * Fonction permettant de d'obtenir le stock d'un produit à partir de son id */
 function getStockProd($id)
 {
     try {
@@ -317,12 +380,22 @@ function getStockProd($id)
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
         return $res;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+
+/**
+ * Fonction permettant de modifier le stock d'un produit.
+ *
+ * @param [type] $idProd
+ * @param [type] $idContenance
+ * @param [type] $stock
+ * @return void
+ */
 function updateStock($idProd, $idContenance, $stock)
 {
     try {
@@ -334,12 +407,14 @@ function updateStock($idProd, $idContenance, $stock)
         $req->bindParam(':id_contenance', $idContenance);
         $req->bindParam(':stock', $stock);
         $req->execute();
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+/* * Fonction permettant de modifier le prix d'un produit . */
 function updatePrix($idProd, $idContenance, $prix)
 {
     try {
@@ -351,12 +426,16 @@ function updatePrix($idProd, $idContenance, $prix)
         $req->bindParam(':id_contenance', $idContenance);
         $req->bindParam(':prix', $prix);
         $req->execute();
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+/**
+ * Fonction qui permet de supprimer une contenance d'un produit.
+ */
 function supprimerPosseder($idProd, $idContenance)
 {
     try {
@@ -365,12 +444,16 @@ function supprimerPosseder($idProd, $idContenance)
         $req->bindParam(':id_contenance', $idContenance);
         $req->bindParam(':id_produit', $idProd);
         $req->execute();
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+/**
+ * Fonction qui permet d'ajouter une contenance à un produit.
+ */
 function ajouterPosseder($id_contenance, $id_produit, $stock, $prix)
 {
     try {
@@ -381,11 +464,17 @@ function ajouterPosseder($id_contenance, $id_produit, $stock, $prix)
         $req->bindParam(':stock', $stock);
         $req->bindParam(':prix', $prix);
         $req->execute();
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
+
+
+/**
+ * Fontion qui permet de vérifier si il exite bien un produut dans la table produit.
+ */
 
 function existeProduit($idProd): bool
 {
@@ -397,15 +486,19 @@ function existeProduit($idProd): bool
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
         if (empty($res)) {
             $exist = false;
-        } else {
+        }
+        else {
             $exist = true;
         }
         return $exist;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
+/* * Fonction qui permet de d'obtenir toutes les contenances de la base. */
+
 
 function getContenances()
 {
@@ -417,12 +510,20 @@ function getContenances()
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
         return $res;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+/**
+ * Fonction qui permet de créer une contenance.
+ *
+ * @param int $contenance
+ * @param  int $id_unite
+ * @return void
+ */
 function creerContenance($contenance, $id_unite)
 {
     try {
@@ -439,12 +540,20 @@ function creerContenance($contenance, $id_unite)
         $req->bindParam(':contenance', $contenance);
         $req->bindParam(':id_unite', $id_unite);
         $req->execute();
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+/**
+ * Fonctiont qui permet de vérifier si il existe une contenance dans la base de donnée.
+ *
+ * @param [type] $contenance
+ * @param [type] $id_unite
+ * @return void
+ */
 function existeContenance($contenance, $id_unite)
 {
     try {
@@ -456,17 +565,24 @@ function existeContenance($contenance, $id_unite)
         $res = $req->fetch(PDO::FETCH_ASSOC);
         if (empty($res)) {
             $exist = false;
-        } else {
+        }
+        else {
             $exist = true;
         }
         return $exist;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
-
+/**
+ * Fonction qui permet de d'obtenir toutes les contenances d'un produit à parti de son id.
+ *
+ * @param [type] $IdProd
+ * @return void
+ */
 function getContenancesProd($IdProd)
 {
     try {
@@ -482,13 +598,19 @@ function getContenancesProd($IdProd)
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
         return $res;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
-
+/**
+ * Fonction qui permet de supprimer toutes les contenances d'un produit à partir de son id.
+ *
+ * @param [type] $idProd
+ * @return void
+ */
 function supprimerContenancesProd($idProd)
 {
     try {
@@ -496,12 +618,19 @@ function supprimerContenancesProd($idProd)
         $req = $monPdo->prepare("DELETE FROM posseder WHERE id_produit=:id_produit");
         $req->bindParam(':id_produit', $idProd);
         $req->execute();
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+/**
+ * Fonciont qui permet de supprimer les associations d"un produit à partir d'un id.
+ *
+ * @param [type] $idProd
+ * @return void
+ */
 function supprimerAssociationsProd($idProd)
 {
     try {
@@ -509,12 +638,19 @@ function supprimerAssociationsProd($idProd)
         $req = $monPdo->prepare("DELETE FROM suggestion WHERE id=:id_produit OR id_produit=:id_produit");
         $req->bindParam(':id_produit', $idProd);
         $req->execute();
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
+/**
+ * Fonction qui pemret de vérifier si il ya un produit dans cette commande à partir d"un id.
+ *
+ * @param [type] $idProd
+ * @return void
+ */
 function verifProdCommande($idProd)
 {
 
@@ -527,17 +663,24 @@ function verifProdCommande($idProd)
 
         if (empty($res)) {
             $exist = false;
-        } else {
+        }
+        else {
             $exist = true;
         }
         return $exist;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
 }
 
-
+/**
+ * Fonction qui permet de vérifier si il y aune contenance pour ce produit à partir d'un id.
+ *
+ * @param [type] $idProd
+ * @return void
+ */
 function verifProdContenance($idProd)
 {
 
@@ -550,12 +693,75 @@ function verifProdContenance($idProd)
 
         if (empty($res)) {
             $exist = false;
-        } else {
+        }
+        else {
             $exist = true;
         }
         return $exist;
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
+}
+
+/**
+ * Vérification si il y a une contenance dans la table posséder.
+ *
+ * @param [type] $idProd
+ * @param [type] $idCont
+ * @return void
+ */
+function verifContPosseder($idProd, $idCont)
+{
+    try {
+        $monPdo = connexionPDOAdmin();
+        $req = $monPdo->prepare("SELECT id_produit, id_contenance FROM posseder WHERE id_produit=:id_produit AND id_contenance=:id_contenance");
+        $req->bindParam(':id_produit', $idProd);
+        $req->bindParam(':id_contenance', $idCont);
+        $req->execute();
+        $res = $req->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($res)) {
+            $exist = false;
+        }
+        else {
+            $exist = true;
+        }
+        return $exist;
+    }
+    catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+
+}
+
+/**
+ * Fonction qui permet de vérifier si il y a une contenance dans la table contenir.
+ */
+
+function verifContContenir($idProd, $idCont)
+{
+    try {
+        $monPdo = connexionPDOAdmin();
+        $req = $monPdo->prepare("SELECT idProduit, id_contenance FROM contenir WHERE idProduit=:id_produit AND id_contenance=:id_contenance");
+        $req->bindParam(':id_produit', $idProd);
+        $req->bindParam(':id_contenance', $idCont);
+        $req->execute();
+        $res = $req->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($res)) {
+            $exist = false;
+        }
+        else {
+            $exist = true;
+        }
+        return $exist;
+    }
+    catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+
 }

@@ -1,3 +1,4 @@
+<h1>Créer un produit</h1>
 <form action="" method="POST">
     <label for="id">Nom du produit : </label>
     <input type="text" name="id" required><br>
@@ -39,9 +40,9 @@
         }
         ?>
     </select><br>
-    <a href="index.php?uc=administrer&action=creerContenance">créer une contenance</a><br>
+    <a href="index.php?uc=administrer&action=creerContenance">Créer une contenance</a><br>
 
-    <label for="prix">prix : </label>
+    <label for="prix">Prix : </label>
     <input type="text" name="prix" required><br>
     <input type="submit" name="submit" value="Créer">
 </form>

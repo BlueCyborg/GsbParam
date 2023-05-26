@@ -1,3 +1,4 @@
+<h1>Editer cette association</h1>
 <form action="" method="post">
     <label for="produit1">Produit :</label>
     <select name="produit1" id="produit1" required>

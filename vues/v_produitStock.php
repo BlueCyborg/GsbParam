@@ -1,4 +1,4 @@
-<p>Modifier un stock :</p>
+<h1>Modifier un stock</h1>
 <form action="" method="POST">
     <select name="produitStock" id="produitStock">
         <?php

@@ -1,4 +1,4 @@
-<p>Editer un produit</p>
+<h1>Editer un produit</h1>
 <form action="" method="post">
     <?php
     if (isset($infoProd['id'])) {

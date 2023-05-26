@@ -1,7 +1,8 @@
  <?php
     foreach ($lesStockProd as $unStockProd) {
     ?>
-     <p>Modifier le stock</p>
+    <h1>Modifier un stock</h1>
+
      <form action="index.php?uc=administrer&action=modifierStock" method="post">
          <label for="">Identifiant</label>
          <input name="idprod" type="text" value="<?= $unStockProd['id_produit'] ?>" readonly><br>
