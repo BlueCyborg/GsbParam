@@ -391,7 +391,7 @@ function existeProduit($idProd): bool
 {
     try {
         $monPdo = connexionPDO();
-        $req = $monPdo->prepare("select id from produit where id=:id_produit");
+        $req = $monPdo->prepare("SELECT id from produit where id=:id_produit");
         $req->bindParam(':id_produit', $idProd);
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
@@ -482,6 +482,78 @@ function getContenancesProd($IdProd)
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
         return $res;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+
+function supprimerContenancesProd($idProd)
+{
+    try {
+        $monPdo = connexionPDOAdmin();
+        $req = $monPdo->prepare("DELETE FROM posseder WHERE id_produit=:id_produit");
+        $req->bindParam(':id_produit', $idProd);
+        $req->execute();
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function supprimerAssociationsProd($idProd)
+{
+    try {
+        $monPdo = connexionPDOAdmin();
+        $req = $monPdo->prepare("DELETE FROM suggestion WHERE id=:id_produit OR id_produit=:id_produit");
+        $req->bindParam(':id_produit', $idProd);
+        $req->execute();
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function verifProdCommande($idProd)
+{
+
+    try {
+        $monPdo = connexionPDOAdmin();
+        $req = $monPdo->prepare("SELECT idProduit FROM contenir WHERE idProduit=:id_produit");
+        $req->bindParam(':id_produit', $idProd);
+        $req->execute();
+        $res = $req->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($res)) {
+            $exist = false;
+        } else {
+            $exist = true;
+        }
+        return $exist;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+
+function verifProdContenance($idProd)
+{
+
+    try {
+        $monPdo = connexionPDOAdmin();
+        $req = $monPdo->prepare("SELECT idProduit FROM contenir WHERE id_produit=:id_produit");
+        $req->bindParam(':id_produit', $idProd);
+        $req->execute();
+        $res = $req->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($res)) {
+            $exist = false;
+        } else {
+            $exist = true;
+        }
+        return $exist;
     } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();

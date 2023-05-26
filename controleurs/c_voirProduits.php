@@ -18,7 +18,7 @@ switch ($action) {
 			break;
 		}
 	case 'nosProduits': {
-			$lesProduits = getLesProduits();
+			$lesProduits = getLesProduitsAvecContenance();
 			//var_dump($lesProduits);
 			include("vues/v_produits.php");
 			break;

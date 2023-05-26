@@ -41,12 +41,10 @@ if (isset($_SESSION['administrateur'])) {
                         );
 
                         echo 'Le Produit à bien été crée !';
-                    }
-                    else {
+                    } else {
                         echo 'Le produit existe déjà !';
                     }
-                }
-                else {
+                } else {
                     $contenances = getContenances();
                     $categories = getLesCategories();
                     $marques = getLesMarques();
@@ -63,12 +61,10 @@ if (isset($_SESSION['administrateur'])) {
                     var_dump($_POST['unite']);
                     if (!existeContenance($_POST['laContenance'], $_POST['unite'])) {
                         creerContenance($_POST['laContenance'], $_POST['unite']);
-                    }
-                    else {
+                    } else {
                         echo 'Cette contenance exite déjà !';
                     }
-                }
-                else {
+                } else {
                     $unites = getLesUnites();
                     include("vues/v_creerContenance.php");
                 }
@@ -82,8 +78,7 @@ if (isset($_SESSION['administrateur'])) {
                     var_dump($_POST['contenance'], $_POST['id_contenance'], $_POST['stock'], $_POST['prix'], $_POST['idProd']);
                     updateStock($_POST['idProd'], $_POST['id_contenance'], $_POST['stock']);
                     updatePrix($_POST['idProd'], $_POST['id_contenance'], $_POST['prix']);
-                }
-                else {
+                } else {
                     supprimerPosseder($_POST['idProd'], $_POST['id_contenance']);
                 }
 
@@ -100,8 +95,7 @@ if (isset($_SESSION['administrateur'])) {
                         $_POST['categorie'],
                     );
                     echo 'Le Produit à bien été modifié !';
-                }
-                else {
+                } else {
                     $contenances = getContenances();
                     $contenancesProd = getContenancesProd($_REQUEST['produit']);
                     //var_dump($contenancesProd);
@@ -121,12 +115,10 @@ if (isset($_SESSION['administrateur'])) {
                     if (!existeAssociation($_POST['produit1'], $_POST['produit2'])) {
                         associerProduit($_POST['produit1'], $_POST['produit2']);
                         echo 'Vous avez associer deux produits !';
-                    }
-                    else {
+                    } else {
                         echo 'Il y a déja une association entre ces deux produits !';
                     }
-                }
-                else {
+                } else {
                     if (isset($_POST['produit1']) && isset($_POST['produit2'])) {
                         if ($_POST['produit1'] == $_POST['produit2']) {
                             echo 'Deux mêmes produits !';
@@ -149,8 +141,7 @@ if (isset($_SESSION['administrateur'])) {
                     var_dump($_REQUEST['stock']);
                     var_dump($_REQUEST['prix']);
                     ajouterPosseder($_REQUEST['lesContenances'], $_REQUEST['produit'], $_REQUEST['stock'], $_REQUEST['prix']);
-                }
-                else {
+                } else {
                     $contenances = getContenances();
                     include("vues/v_ajoutContenance.php");
                 }
@@ -163,21 +154,18 @@ if (isset($_SESSION['administrateur'])) {
                 if (isset($_POST['modifier']) || isset($_POST['supprimer'])) {
                     if (isset($_POST['modifier'])) {
                         if (($_GET['produit1'] == $_POST['produit1'] || $_GET['produit1'] == $_POST['produit2']) &&
-                        ($_GET['produit2'] == $_POST['produit1'] || $_GET['produit2'] == $_POST['produit2'])
+                            ($_GET['produit2'] == $_POST['produit1'] || $_GET['produit2'] == $_POST['produit2'])
                         ) {
                             echo 'Modification impossible !';
-                        }
-                        else {
+                        } else {
                             if (!existeAssociation($_POST['produit1'], $_POST['produit2'])) {
                                 if ($_POST['produit1'] !== $_POST['produit2']) {
                                     modificationAssociation($_GET['produit1'], $_GET['produit2'], $_POST['produit1'], $_POST['produit2']);
                                     echo 'Vous avez modifier cette association !';
-                                }
-                                else {
+                                } else {
                                     echo 'Deux mêmes produits !';
                                 }
-                            }
-                            else {
+                            } else {
                                 echo 'Il y a déja une association entre ces deux produits !';
                             }
                         }
@@ -186,8 +174,7 @@ if (isset($_SESSION['administrateur'])) {
                         supprimerAssociation($_GET['produit1'], $_GET['produit2']);
                         echo 'Vous avez supprimer cette association !';
                     }
-                }
-                else {
+                } else {
                     $produits = getLesProduits();
                     include("vues/v_modifAssociation.php");
                 }
@@ -200,8 +187,7 @@ if (isset($_SESSION['administrateur'])) {
                 if (isset($_POST['modifStock'])) {
                     $lesStockProd = getStockProd($_POST['produitStock']);
                     include("vues/v_modifStock.php");
-                }
-                else {
+                } else {
                     $lesProduits = getLesProduits();
                     include("vues/v_produitStock.php");
                 }
@@ -221,8 +207,16 @@ if (isset($_SESSION['administrateur'])) {
                 break;
             }
         case 'supprimer': {
-                supprimerProduit($_REQUEST['produit']);
-                echo 'Le produit à bien été supprimé';
+
+                if (!verifProdCommande($_REQUEST['produit'])) {
+                    supprimerContenancesProd($_REQUEST['produit']);
+                    supprimerAssociationsProd($_REQUEST['produit']);
+                    supprimerProduit($_REQUEST['produit']);
+                    echo 'Le produit à bien été supprimé';
+                } else {
+                    echo 'Il y a une commande avec ce produit, vous ne pouvez pas le supprimer !';
+                }
+
                 break;
             }
         case 'deconnexion': {
@@ -234,8 +228,7 @@ if (isset($_SESSION['administrateur'])) {
                 break;
             }
     }
-}
-else {
+} else {
     switch ($action) {
         case 'connexion': {
                 //Si l'administrateur à déjà rentré les valeurs
@@ -246,30 +239,26 @@ else {
                     if (count($msgErreurs) != 0) {
                         //S'il y a des erreurs alors on les affiches
                         include("vues/v_erreurs.php");
-                    }
-                    else {
+                    } else {
                         $connexion = connexionCompteAdministrateur($user, $password);
                         if (empty($connexion)) {
                             $msgErreurs[] = "Vous n'êtes pas inscrit.";
                             include("vues/v_erreurs.php");
-                        }
-                        else {
+                        } else {
                             $message = "Vous êtes désormais connecté";
                             include_once("vues/v_message.php");
                             $_SESSION['administrateur'] = $user;
                         }
                     }
-                }
-                elseif (isset($_SESSION['administrateur']) and !empty($_SESSION['administrateur'])) {
+                } elseif (isset($_SESSION['administrateur']) and !empty($_SESSION['administrateur'])) {
                     $message = "Vous est déjà authentifié";
                     include("vues/v_message.php");
-                }
-                else {
+                } else {
                     include("vues/v_connexionAdministrateur.php");
                 }
                 break;
             }
-        //Par défault l'on redirige l'utilisateur vers la page d'accueil pour cacher la page administrateur
+            //Par défault l'on redirige l'utilisateur vers la page d'accueil pour cacher la page administrateur
         default: {
                 header('Location:index.php?uc=accueil');
                 exit();

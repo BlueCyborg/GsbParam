@@ -46,32 +46,6 @@ switch ($action) {
 				$msgErreurs[] = "Vous devez être connecté";
 				include("vues/v_erreurs.php");
 			}
-			/*
-			if (isset($_SESSION['user'])) {
-				$n = nbProduitsDuPanier();
-				if ($n > 0) {
-					// ici le formulaire doit être vide, quand il est erroné, le formulaire sera réaffiché pré-rempli
-					$info = infoUtilisateur($_SESSION['user']);
-					$nom = $info['nom'] . ' ' . $info['prenom'];
-					$nom = htmlspecialchars($nom);
-					$rue = $info['adresse'];
-					$rue = htmlspecialchars($rue);
-					$ville = $info['ville'];
-					$ville = htmlspecialchars($ville);
-					$cp = $info['cp'];
-					$cp = htmlspecialchars($cp);
-					$mail = $_SESSION['user'];
-					$mail = htmlspecialchars($mail);
-					include("vues/v_commande.php");
-				} else {
-					$message = "panier vide !!";
-					include("vues/v_message.php");
-				}
-			} else {
-				$msgErreurs[] = "Vous devez être connecté";
-				include("vues/v_erreurs.php");
-			}
-			*/
 			break;
 		}
 	case 'confirmerCommande': {

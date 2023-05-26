@@ -236,6 +236,27 @@ function getLesProduits()
 		die();
 	}
 }
+
+function getLesProduitsAvecContenance()
+{
+	try {
+		$monPdo = connexionPDO();
+		$req = 'SELECT `id`,`description`,`image`,`idCategorie`, MIN(prix) AS prix
+		FROM produit pr
+		INNER JOIN posseder po
+		ON pr.id=po.id_produit
+		GROUP BY id';
+		$res = $monPdo->query($req);
+		$lesProduits = $res->fetchAll(PDO::FETCH_ASSOC);
+		return $lesProduits;
+	} catch (PDOException $e) {
+		print "Erreur !: " . $e->getMessage();
+		die();
+	}
+}
+
+
+
 /**
  * Retourne les informations d'un produits
  * 
